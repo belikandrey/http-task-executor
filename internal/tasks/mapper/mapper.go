@@ -13,7 +13,7 @@ func MapRequestToTask(req *dto.NewTaskRequest) models.Task {
 	task.Headers = make([]models.Header, 0)
 	if req.Headers != nil && len(req.Headers) > 0 {
 		for name, value := range req.Headers {
-			task.Headers = append(task.Headers, models.Header{Name: name, Value: value})
+			task.Headers = append(task.Headers, models.Header{Name: name, Value: value, Input: true})
 		}
 	}
 	return task

@@ -28,11 +28,11 @@ func (r *TaskRepository) Create(ctx context.Context, task *models.Task) (*models
 		task.Headers = make([]models.Header, 0)
 	}
 
-	prepare, err := tx.PrepareContext(ctx, "INSERT INTO task (method, url, status, response_status, response_length) VALUES ($1, $2, $3, $4, $5) RETURNING id")
+	prepare, err := tx.PrepareContext(ctx, "INSERT INTO task (method, url, status, response_status_code, response_length) VALUES ($1, $2, $3, $4, $5) RETURNING id")
 	if err != nil {
-		err = tx.Rollback()
-		if err != nil {
-			return nil, errors.Wrap(err, "TaskRepository.Create.PrepareContext.Rollback")
+		err1 := tx.Rollback()
+		if err1 != nil {
+			return nil, errors.Wrap(err1, "TaskRepository.Create.PrepareContext.Rollback")
 		}
 		return nil, errors.Wrap(err, "TaskRepository.Create.PrepareContext")
 	}
@@ -40,18 +40,18 @@ func (r *TaskRepository) Create(ctx context.Context, task *models.Task) (*models
 	rowContext := prepare.QueryRowContext(ctx, task.Method, task.Url, task.Status, task.ResponseStatus, task.ResponseLength)
 	err = rowContext.Scan(&id)
 	if err != nil {
-		err = tx.Rollback()
-		if err != nil {
-			return nil, errors.Wrap(err, "TaskRepository.Create.QueryRowContext.Rollback")
+		err1 := tx.Rollback()
+		if err1 != nil {
+			return nil, errors.Wrap(err1, "TaskRepository.Create.QueryRowContext.Rollback")
 		}
 		return nil, errors.Wrap(err, "TaskRepository.Create.QueryRowContext")
 	}
 
 	err = createHeaders(ctx, tx, id, task.Headers)
 	if err != nil {
-		err = tx.Rollback()
-		if err != nil {
-			return nil, errors.Wrap(err, "TaskRepository.Create.createHeaders.Rollback")
+		err1 := tx.Rollback()
+		if err1 != nil {
+			return nil, errors.Wrap(err1, "TaskRepository.Create.createHeaders.Rollback")
 		}
 		return nil, errors.Wrap(err, "TaskRepository.Create.createHeaders")
 	}
@@ -104,6 +104,9 @@ func (r *TaskRepository) GetByIdWithOutputHeaders(ctx context.Context, id int64)
 
 		task.Headers = append(task.Headers, header)
 	}
+	if task == nil {
+		return nil, sql.ErrNoRows
+	}
 
 	return task, nil
 }
@@ -137,17 +140,17 @@ func (r *TaskRepository) UpdateResult(ctx context.Context, task *models.Task) er
 
 	prepare, err := tx.PrepareContext(ctx, "UPDATE task SET status = $1, response_status_code = $2, response_length = $3 WHERE id = $4")
 	if err != nil {
-		err = tx.Rollback()
-		if err != nil {
-			return errors.Wrap(err, "TaskRepository.UpdateResult.PrepareContext.Rollback")
+		err1 := tx.Rollback()
+		if err1 != nil {
+			return errors.Wrap(err1, "TaskRepository.UpdateResult.PrepareContext.Rollback")
 		}
 		return errors.Wrap(err, "TaskRepository.UpdateResult.PrepareContext")
 	}
 	_, err = prepare.ExecContext(ctx, task.Status, task.ResponseStatus, task.ResponseLength, task.Id)
 	if err != nil {
-		err = tx.Rollback()
-		if err != nil {
-			return errors.Wrap(err, "TaskRepository.UpdateResult.ExecContext.Rollback")
+		err1 := tx.Rollback()
+		if err1 != nil {
+			return errors.Wrap(err1, "TaskRepository.UpdateResult.ExecContext.Rollback")
 		}
 		return errors.Wrap(err, "TaskRepository.UpdateResult.ExecContext")
 	}
@@ -160,9 +163,9 @@ func (r *TaskRepository) UpdateResult(ctx context.Context, task *models.Task) er
 	}
 	err = createHeaders(ctx, tx, task.Id, outputHeaders)
 	if err != nil {
-		err = tx.Rollback()
-		if err != nil {
-			return errors.Wrap(err, "TaskRepository.UpdateResult.createHeaders.Rollback")
+		err1 := tx.Rollback()
+		if err1 != nil {
+			return errors.Wrap(err1, "TaskRepository.UpdateResult.createHeaders.Rollback")
 		}
 		return errors.Wrap(err, "TaskRepository.UpdateResult.createHeaders")
 	}

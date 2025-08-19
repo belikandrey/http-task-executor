@@ -56,7 +56,7 @@ func (h *TaskHandlers) Create() http.HandlerFunc {
 			render.JSON(w, r, data)
 			return
 		}
-		render.Status(r, http.StatusCreated)
+		render.Status(r, http.StatusOK)
 		render.JSON(w, r, mapper.MapIdToTaskResponse(create.Id))
 	}
 }

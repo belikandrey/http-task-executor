@@ -61,6 +61,8 @@ func validateTask(ctx context.Context, task *models.Task) []validation.Validatio
 		}
 	}
 	errMethod := utils.ValidateHttpMethod(task.Method)
-	errors = append(errors, errMethod)
+	if errMethod != nil {
+		errors = append(errors, errMethod)
+	}
 	return errors
 }

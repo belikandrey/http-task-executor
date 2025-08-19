@@ -9,10 +9,10 @@ const (
 
 type Task struct {
 	Id             int64  `db:"id"`
-	Url            string `db:"url" validate:"required"`
+	Url            string `db:"url" validate:"required,url"`
 	Method         string `db:"method" validate:"required"`
 	Status         string `db:"status"`
-	ResponseStatus *int64 `db:"response_status"`
+	ResponseStatus *int64 `db:"response_status_code"`
 	ResponseLength *int64 `db:"response_length"`
 	Headers        []Header
 }
