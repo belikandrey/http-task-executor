@@ -32,15 +32,13 @@ func (s *Server) Start() error {
 
 	router := chi.NewRouter()
 
+	s.AddHandlers(router)
+
 	srv := &http.Server{
 		Addr:         fmt.Sprintf("%s:%d", s.config.ServerConfig.Host, s.config.ServerConfig.Port),
 		Handler:      router,
 		ReadTimeout:  s.config.ServerConfig.ReadTimeout,
 		WriteTimeout: s.config.ServerConfig.WriteTimeout,
-	}
-
-	if err := s.AddHandlers(router); err != nil {
-		return err
 	}
 
 	go func() {

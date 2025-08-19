@@ -9,6 +9,13 @@ import (
 	"log"
 )
 
+// @title Task executor Rest API
+// @version 1.0
+// @description Executes request to 3-rd services
+// @contact.name Andrei Belik
+// @contact.url https://github.com/belikandrey
+// @contact.email belikandrey01@gmail.com
+// @BasePath /
 func main() {
 	log.Println("Starting api server")
 

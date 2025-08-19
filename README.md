@@ -16,3 +16,5 @@
 
 #### Run with flag --config=./config/local.yaml(prod.yaml) or with env variable CONFIG_PATH
 
+
+#### Generate swagger docs  swag init -g cmd/api/main.go
