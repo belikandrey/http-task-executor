@@ -1,0 +1,19 @@
+info:
+  contact: {}
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: HelloWorld description
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: HelloWorld summary
+      tags:
+      - hw tag
+swagger: "2.0"
