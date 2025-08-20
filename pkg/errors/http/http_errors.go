@@ -3,10 +3,12 @@ package http
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"http-task-executor/pkg/errors/general/validation"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -92,11 +94,20 @@ func NewInternalServerError(causes interface{}) RestErr {
 }
 
 func ParseErrors(err error) RestErr {
+	var unmarshalTypeError *json.UnmarshalTypeError
+	var jsonSyntaxType *json.SyntaxError
+	var strconvNumError *strconv.NumError
 	switch {
 	case errors.Is(err, sql.ErrNoRows):
 		return NewRestError(http.StatusNotFound, ErrNotFound.Error(), err)
 	case errors.Is(err, context.DeadlineExceeded):
 		return NewRestError(http.StatusRequestTimeout, ErrRequestTimeoutError.Error(), err)
+	case errors.As(err, &unmarshalTypeError):
+		return NewRestError(http.StatusBadRequest, ErrBadRequest.Error(), err)
+	case errors.As(err, &jsonSyntaxType):
+		return NewRestError(http.StatusBadRequest, ErrBadRequest.Error(), err)
+	case errors.As(err, &strconvNumError):
+		return NewRestError(http.StatusBadRequest, ErrBadRequest.Error(), err)
 	default:
 		if restErr, ok := err.(RestErr); ok {
 			return restErr

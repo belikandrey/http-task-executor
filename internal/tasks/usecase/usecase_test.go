@@ -17,6 +17,7 @@ import (
 )
 
 func TestTaskUseCase_Create(t *testing.T) {
+	t.Parallel()
 	ctrx := gomock.NewController(t)
 	defer ctrx.Finish()
 
@@ -55,6 +56,8 @@ func TestTaskUseCase_Create(t *testing.T) {
 }
 
 func TestTaskUseCase_CreateWithErrorsNotExecuteTask(t *testing.T) {
+	t.Parallel()
+
 	ctrx := gomock.NewController(t)
 	defer ctrx.Finish()
 
@@ -92,6 +95,8 @@ func TestTaskUseCase_CreateWithErrorsNotExecuteTask(t *testing.T) {
 }
 
 func TestTaskUseCase_CreateWithInvalidMethodNotExecuteTask(t *testing.T) {
+	t.Parallel()
+
 	ctrx := gomock.NewController(t)
 	defer ctrx.Finish()
 
@@ -131,6 +136,8 @@ func TestTaskUseCase_CreateWithInvalidMethodNotExecuteTask(t *testing.T) {
 }
 
 func TestTaskUseCase_CreateWithInvalidUrlNotExecuteTask(t *testing.T) {
+	t.Parallel()
+
 	ctrx := gomock.NewController(t)
 	defer ctrx.Finish()
 
@@ -170,6 +177,8 @@ func TestTaskUseCase_CreateWithInvalidUrlNotExecuteTask(t *testing.T) {
 }
 
 func TestTaskUseCase_GetByIdWithOutputHeadersInvalidId(t *testing.T) {
+	t.Parallel()
+
 	ctrx := gomock.NewController(t)
 	defer ctrx.Finish()
 
@@ -196,6 +205,8 @@ func TestTaskUseCase_GetByIdWithOutputHeadersInvalidId(t *testing.T) {
 }
 
 func TestTaskUseCase_GetByIdWithOutputHeadersValidId(t *testing.T) {
+	t.Parallel()
+
 	ctrx := gomock.NewController(t)
 	defer ctrx.Finish()
 
