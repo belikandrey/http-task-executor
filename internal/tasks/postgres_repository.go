@@ -1,3 +1,4 @@
+//go:generate mockgen -source postgres_repository.go -destination mock/postgres_repository.go -package mock
 package tasks
 
 import (
