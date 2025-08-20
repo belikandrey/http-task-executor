@@ -74,8 +74,8 @@ func (r *TaskRepository) GetByIdWithOutputHeaders(ctx context.Context, id int64)
 									t.status as status,
 									t.response_status_code as response_status,
 									t.response_length as response_length,
-									h.name as header_name,
-									h.value as header_value
+									COALESCE(h.name, '') as header_name,
+									COALESCE(h.value, '') as header_value
 									FROM task t
 									LEFT JOIN headers h ON h.task_id = t.id AND h.input=false
 									WHERE t.id = $1`)
@@ -108,8 +108,9 @@ func (r *TaskRepository) GetByIdWithOutputHeaders(ctx context.Context, id int64)
 		if err != nil {
 			return nil, err
 		}
-
-		task.Headers = append(task.Headers, header)
+		if header.Name != "" && header.Value != "" {
+			task.Headers = append(task.Headers, header)
+		}
 	}
 	if task == nil {
 		return nil, sql.ErrNoRows
@@ -134,7 +135,7 @@ func (r *TaskRepository) UpdateStatus(ctx context.Context, id int64, newStatus s
 		return errors.Wrap(err, "TaskRepository.UpdateStatus.RowsAffected")
 	}
 	if affected == 0 {
-		return errors.New("TaskRepository.UpdateStatus.RowsAffected=0")
+		return sql.ErrNoRows
 	}
 	return nil
 }
@@ -153,13 +154,23 @@ func (r *TaskRepository) UpdateResult(ctx context.Context, task *models.Task) er
 		}
 		return errors.Wrap(err, "TaskRepository.UpdateResult.PrepareContext")
 	}
-	_, err = prepare.ExecContext(ctx, task.Status, task.ResponseStatus, task.ResponseLength, task.Id)
+	res, err := prepare.ExecContext(ctx, task.Status, task.ResponseStatus, task.ResponseLength, task.Id)
 	if err != nil {
 		err1 := tx.Rollback()
 		if err1 != nil {
 			return errors.Wrap(err1, "TaskRepository.UpdateResult.ExecContext.Rollback")
 		}
 		return errors.Wrap(err, "TaskRepository.UpdateResult.ExecContext")
+	}
+
+	affected, err := res.RowsAffected()
+
+	if err != nil {
+		return errors.Wrap(err, "TaskRepository.UpdateResult.RowsAffected")
+	}
+
+	if affected == 0 {
+		return sql.ErrNoRows
 	}
 
 	outputHeaders := make([]models.Header, 0)
