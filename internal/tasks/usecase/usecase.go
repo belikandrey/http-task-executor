@@ -25,7 +25,7 @@ func NewTaskUseCase(log logger.Logger, repo tasks.Repository, exec tasks.Executo
 func (t *TaskUseCase) Create(ctx context.Context, task *models.Task) (*models.Task, error) {
 
 	validationErrors := validateTask(ctx, task)
-	if validationErrors != nil && len(validationErrors) > 0 {
+	if len(validationErrors) > 0 {
 		return nil, httpErrors.NewValidationError(validationErrors)
 	}
 

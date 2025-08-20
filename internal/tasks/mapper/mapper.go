@@ -11,7 +11,7 @@ func MapRequestToTask(req *dto.NewTaskRequest) models.Task {
 	task.Method = req.Method
 	task.Status = models.StatusNew
 	task.Headers = make([]models.Header, 0)
-	if req.Headers != nil && len(req.Headers) > 0 {
+	if len(req.Headers) > 0 {
 		for name, value := range req.Headers {
 			task.Headers = append(task.Headers, models.Header{Name: name, Value: value, Input: true})
 		}
@@ -29,7 +29,7 @@ func MapTaskToGetResponse(task *models.Task) dto.GetTaskResponse {
 		ResponseStatus: task.ResponseStatus,
 		ResponseLength: task.ResponseLength}
 	response.Headers = make(map[string]string)
-	if task.Headers != nil && len(task.Headers) > 0 {
+	if len(task.Headers) > 0 {
 		for _, header := range task.Headers {
 			response.Headers[header.Name] = header.Value
 		}

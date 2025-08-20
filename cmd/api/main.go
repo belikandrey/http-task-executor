@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/jmoiron/sqlx"
 	_ "http-task-executor/docs"
 	"http-task-executor/internal/config"
 	"http-task-executor/internal/http/server"
@@ -37,7 +38,12 @@ func main() {
 		appLogger.Infof("Init postgresql database success")
 	}
 
-	defer database.Close()
+	defer func(database *sqlx.DB) {
+		err := database.Close()
+		if err != nil {
+			appLogger.Errorf("Close postgresql database error: %v", err)
+		}
+	}(database)
 
 	err = migration.MigratePostgresql(database)
 	if err != nil {

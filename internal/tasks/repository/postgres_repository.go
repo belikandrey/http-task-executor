@@ -6,16 +6,18 @@ import (
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
+	"http-task-executor/internal/logger"
 	"http-task-executor/internal/models"
 	"strings"
 )
 
 type TaskRepository struct {
-	db *sqlx.DB
+	db  *sqlx.DB
+	log logger.Logger
 }
 
-func NewRepository(db *sqlx.DB) *TaskRepository {
-	return &TaskRepository{db: db}
+func NewRepository(db *sqlx.DB, log logger.Logger) *TaskRepository {
+	return &TaskRepository{db: db, log: log}
 }
 
 func (r *TaskRepository) Create(ctx context.Context, task *models.Task) (*models.Task, error) {
@@ -85,7 +87,12 @@ func (r *TaskRepository) GetByIdWithOutputHeaders(ctx context.Context, id int64)
 		return nil, errors.Wrap(err, "TaskRepository.GetByIdWithResponseHeaders.QueryContext")
 	}
 
-	defer rows.Close()
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		if err != nil {
+			r.log.Errorf("TaskRepository.GetByIdWithResponseHeaders.rows.Close(): %v", err)
+		}
+	}(rows)
 
 	var task *models.Task
 	tempTask := &models.Task{}
@@ -179,7 +186,7 @@ func (r *TaskRepository) UpdateResult(ctx context.Context, task *models.Task) er
 }
 
 func createHeaders(ctx context.Context, tx *sql.Tx, taskId int64, headers []models.Header) error {
-	if headers == nil || len(headers) == 0 {
+	if len(headers) == 0 {
 		return nil
 	}
 	sb := new(strings.Builder)
@@ -189,7 +196,10 @@ func createHeaders(ctx context.Context, tx *sql.Tx, taskId int64, headers []mode
 	for _, v := range headers {
 		separator := ","
 		params = append(params, v.Name, v.Value, v.Input)
-		sb.WriteString(fmt.Sprintf("($%d, $%d, $%d, %d) %s", counter, counter+1, counter+2, taskId, separator))
+		_, err := fmt.Fprintf(sb, "($%d, $%d, $%d, %d) %s", counter, counter+1, counter+2, taskId, separator)
+		if err != nil {
+			return err
+		}
 		counter += 3
 	}
 	s := sb.String()

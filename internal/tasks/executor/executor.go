@@ -52,7 +52,12 @@ func (e *Executor) ExecuteTask(task models.Task) {
 		return
 	}
 
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			e.log.Errorf("executor.ExecuteTask.DoBody.Close : %v", err)
+		}
+	}(resp.Body)
 
 	contentLength, err := io.Copy(io.Discard, resp.Body)
 	if err != nil {

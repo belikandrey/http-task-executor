@@ -11,10 +11,10 @@ import (
 )
 
 var (
-	BadRequest          = errors.New("Bad request")
-	NotFound            = errors.New("Not Found")
-	RequestTimeoutError = errors.New("Request Timeout")
-	InternalServerError = errors.New("Internal Server Error")
+	ErrBadRequest          = errors.New("bad request")
+	ErrNotFound            = errors.New("not Found")
+	ErrRequestTimeoutError = errors.New("request Timeout")
+	ErrInternalServerError = errors.New("internal Server Error")
 )
 
 type RestErr interface {
@@ -44,7 +44,7 @@ func (e RestError) Causes() interface{} {
 func NewBadRequestError(causes interface{}) RestErr {
 	return RestError{
 		ErrStatus: http.StatusBadRequest,
-		ErrError:  BadRequest.Error(),
+		ErrError:  ErrBadRequest.Error(),
 		ErrCauses: causes,
 	}
 }
@@ -85,7 +85,7 @@ func NewRestError(status int, err string, causes interface{}) RestErr {
 func NewInternalServerError(causes interface{}) RestErr {
 	result := RestError{
 		ErrStatus: http.StatusInternalServerError,
-		ErrError:  InternalServerError.Error(),
+		ErrError:  ErrInternalServerError.Error(),
 		ErrCauses: causes,
 	}
 	return result
@@ -94,9 +94,9 @@ func NewInternalServerError(causes interface{}) RestErr {
 func ParseErrors(err error) RestErr {
 	switch {
 	case errors.Is(err, sql.ErrNoRows):
-		return NewRestError(http.StatusNotFound, NotFound.Error(), err)
+		return NewRestError(http.StatusNotFound, ErrNotFound.Error(), err)
 	case errors.Is(err, context.DeadlineExceeded):
-		return NewRestError(http.StatusRequestTimeout, RequestTimeoutError.Error(), err)
+		return NewRestError(http.StatusRequestTimeout, ErrRequestTimeoutError.Error(), err)
 	default:
 		if restErr, ok := err.(RestErr); ok {
 			return restErr
