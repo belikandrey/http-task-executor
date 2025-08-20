@@ -19,16 +19,8 @@ func TestTasksRepo_CreateWithoutHeaders(t *testing.T) {
 
 	db, mock, err := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
 	require.NoError(t, err)
-	defer func(db *dbSql.DB) {
-		err := db.Close()
-		require.NoError(t, err)
-	}(db)
 
 	sqlxDb := sqlx.NewDb(db, "sqlmock")
-	defer func(sqlxDb *sqlx.DB) {
-		err := sqlxDb.Close()
-		require.NoError(t, err)
-	}(sqlxDb)
 
 	sugar := zap.New(zapcore.NewNopCore()).Sugar()
 
@@ -63,16 +55,8 @@ func TestTasksRepo_CreateWithHeaders(t *testing.T) {
 
 	db, mock, err := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
 	require.NoError(t, err)
-	defer func(db *dbSql.DB) {
-		err := db.Close()
-		require.NoError(t, err)
-	}(db)
 
 	sqlxDb := sqlx.NewDb(db, "sqlmock")
-	defer func(sqlxDb *sqlx.DB) {
-		err := sqlxDb.Close()
-		require.NoError(t, err)
-	}(sqlxDb)
 
 	sugar := zap.New(zapcore.NewNopCore()).Sugar()
 
@@ -170,16 +154,8 @@ func TestTasksRepo_GetByIdWithOutputHeaders(t *testing.T) {
 
 	db, mock, err := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
 	require.NoError(t, err)
-	defer func(db *dbSql.DB) {
-		err := db.Close()
-		require.NoError(t, err)
-	}(db)
 
 	sqlxDb := sqlx.NewDb(db, "sqlmock")
-	defer func(sqlxDb *sqlx.DB) {
-		err := sqlxDb.Close()
-		require.NoError(t, err)
-	}(sqlxDb)
 
 	sugar := zap.New(zapcore.NewNopCore()).Sugar()
 
@@ -313,16 +289,8 @@ func TestTasksRepo_UpdateStatus(t *testing.T) {
 
 	db, mock, err := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
 	require.NoError(t, err)
-	defer func(db *dbSql.DB) {
-		err := db.Close()
-		require.NoError(t, err)
-	}(db)
 
 	sqlxDb := sqlx.NewDb(db, "sqlmock")
-	defer func(sqlxDb *sqlx.DB) {
-		err := sqlxDb.Close()
-		require.NoError(t, err)
-	}(sqlxDb)
 
 	sugar := zap.New(zapcore.NewNopCore()).Sugar()
 
@@ -361,16 +329,8 @@ func TestTasksRepo_UpdateResultWithoutHeaders(t *testing.T) {
 
 	db, mock, err := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
 	require.NoError(t, err)
-	defer func(db *dbSql.DB) {
-		err := db.Close()
-		require.NoError(t, err)
-	}(db)
 
 	sqlxDb := sqlx.NewDb(db, "sqlmock")
-	defer func(sqlxDb *sqlx.DB) {
-		err := sqlxDb.Close()
-		require.NoError(t, err)
-	}(sqlxDb)
 
 	sugar := zap.New(zapcore.NewNopCore()).Sugar()
 
