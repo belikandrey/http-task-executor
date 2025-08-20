@@ -2,8 +2,15 @@
 
 package tasks
 
-import "http-task-executor/internal/models"
+import (
+	"http-task-executor/internal/models"
+	"net/http"
+)
 
 type Executor interface {
 	ExecuteTask(task models.Task)
+}
+
+type ClientProvider interface {
+	Client() *http.Client
 }

@@ -12,13 +12,21 @@ import (
 )
 
 type Executor struct {
-	log     logger.Logger
-	repo    tasks.Repository
-	timeout time.Duration
+	log            logger.Logger
+	repo           tasks.Repository
+	timeout        time.Duration
+	clientProvider tasks.ClientProvider
 }
 
-func NewExecutor(log logger.Logger, repo tasks.Repository, timeout time.Duration) *Executor {
-	return &Executor{log: log, repo: repo, timeout: timeout}
+type ClientProvider struct {
+}
+
+func (c *ClientProvider) Client() *http.Client {
+	return &http.Client{}
+}
+
+func NewExecutor(log logger.Logger, repo tasks.Repository, clientProvider tasks.ClientProvider, timeout time.Duration) *Executor {
+	return &Executor{log: log, repo: repo, clientProvider: clientProvider, timeout: timeout}
 }
 
 func (e *Executor) ExecuteTask(task models.Task) {
@@ -44,7 +52,8 @@ func (e *Executor) ExecuteTask(task models.Task) {
 		}
 	}
 
-	client := &http.Client{}
+	client := e.clientProvider.Client()
+
 	resp, err := client.Do(req)
 	if err != nil {
 		e.setErrorStatus(task.Id)

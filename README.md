@@ -14,7 +14,7 @@
 
 
 
-#### Run with flag --config=./config/local.yaml(prod.yaml) or with env variable CONFIG_PATH
-
-
 #### Generate swagger docs swag init -g cmd/api/main.go
+#### Swagger available by default at => http://localhost:8081/swagger-ui
+
+#### Run with flag --config=./config/local.yaml(prod.yaml) or with env variable CONFIG_PATH (default => http://localhost:8081)

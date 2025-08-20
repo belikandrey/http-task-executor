@@ -16,7 +16,7 @@ func (s *Server) AddHandlers(router chi.Router) {
 	s.setupMV(router)
 
 	taskRepo := repository.NewRepository(s.database, s.logger)
-	taskExec := executor.NewExecutor(s.logger, taskRepo, s.config.ExternalServiceTimeout)
+	taskExec := executor.NewExecutor(s.logger, taskRepo, &executor.ClientProvider{}, s.config.ExternalServiceTimeout)
 	taskUseCase := usecase.NewTaskUseCase(s.logger, taskRepo, taskExec)
 	taskHandlers := taskHttp.NewTaskHandlers(s.config, s.logger, taskUseCase)
 
