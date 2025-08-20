@@ -31,8 +31,8 @@ func (e *Executor) ExecuteTask(task models.Task) {
 		e.log.Errorf("executor.ExecuteTask.UpdateStatus : %v", err)
 		return
 	}
-
-	req, err := http.NewRequestWithContext(ctx, task.Method, task.Url, nil)
+	e.log.Infof("executor.ExecuteTask: task %v with method %s and url %s", task.Id, task.Method, task.Url)
+	req, err := http.NewRequestWithContext(ctx, strings.ToUpper(task.Method), task.Url, nil)
 	if err != nil {
 		e.setErrorStatus(task.Id)
 		e.log.Errorf("executor.ExecuteTask.NewRequestWithContext : %v", err)
@@ -60,6 +60,8 @@ func (e *Executor) ExecuteTask(task models.Task) {
 		e.log.Errorf("executor.ExecuteTask.DoRequest.Copy : %v", err)
 		return
 	}
+
+	e.log.Infof("executor.ExecuteTask: task %v with method %s and url %s executed successfully with code %v", task.Id, task.Method, req.URL, resp.StatusCode)
 
 	task.ResponseLength = &contentLength
 	task.Status = models.StatusDone

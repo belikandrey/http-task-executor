@@ -5,6 +5,7 @@ import (
 	"http-task-executor/internal/config"
 	"http-task-executor/internal/http/server"
 	"http-task-executor/internal/logger"
+	"http-task-executor/internal/migration"
 	"http-task-executor/internal/postgres"
 	"log"
 )
@@ -37,6 +38,13 @@ func main() {
 	}
 
 	defer database.Close()
+
+	err = migration.MigratePostgresql(database)
+	if err != nil {
+		appLogger.Fatalf("MigratePostgresql database error: %v", err)
+	} else {
+		appLogger.Infof("Database migrated successfully")
+	}
 
 	httpServer := server.NewServer(appConfig, database, appLogger)
 
