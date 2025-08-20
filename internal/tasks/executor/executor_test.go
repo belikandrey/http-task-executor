@@ -10,7 +10,6 @@ import (
 	"http-task-executor/internal/models"
 	"http-task-executor/internal/tasks/mock"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"strings"
 	"testing"
@@ -169,7 +168,7 @@ func TestExecutor_ExecuteTaskWithNotWoringUpdateStatus(t *testing.T) {
 
 	mockResp := &http.Response{
 		StatusCode: 200,
-		Body:       ioutil.NopCloser(strings.NewReader(`{"message": "ok"}`)),
+		Body:       io.NopCloser(strings.NewReader(`{"message": "ok"}`)),
 		Header:     make(http.Header),
 	}
 
