@@ -1,4 +1,4 @@
-package http_task_executor_v2
+package task_service
 
 import "embed"
 
