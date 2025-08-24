@@ -1,0 +1,86 @@
+basePath: /
+definitions:
+  dto.GetTaskResponse:
+    properties:
+      headers:
+        additionalProperties:
+          type: string
+        type: object
+      httpStatusCode:
+        type: integer
+      id:
+        type: integer
+      length:
+        type: integer
+      status:
+        type: string
+    type: object
+  dto.NewTaskRequest:
+    properties:
+      headers:
+        additionalProperties:
+          type: string
+        type: object
+      method:
+        type: string
+      url:
+        type: string
+    type: object
+  dto.NewTaskResponse:
+    properties:
+      id:
+        type: integer
+    type: object
+info:
+  contact:
+    email: belikandrey01@gmail.com
+    name: Andrei Belik
+    url: https://github.com/belikandrey
+  description: Executes request to 3-rd services
+  title: Task executor Rest API
+  version: "1.0"
+paths:
+  /task:
+    post:
+      consumes:
+      - application/json
+      description: Create task and execute request to 3rd service
+      parameters:
+      - description: Task create request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.NewTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.NewTaskResponse'
+      summary: Create task and execute request to 3rd service
+      tags:
+      - Task
+  /task/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get task by id handler
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetTaskResponse'
+      summary: Get task by id
+      tags:
+      - Task
+swagger: "2.0"
