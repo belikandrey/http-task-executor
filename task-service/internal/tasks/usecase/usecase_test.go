@@ -24,9 +24,9 @@ func TestTaskUseCase_Create(t *testing.T) {
 	sugar := zap.New(zapcore.NewNopCore()).Sugar()
 
 	mockTasksRepo := mock.NewMockRepository(ctrx)
-	mockExecutor := mock.NewMockExecutor(ctrx)
+	mockProducer := mock.NewMockProducer(ctrx)
 
-	useCase := NewTaskUseCase(sugar, mockTasksRepo, mockExecutor)
+	useCase := NewTaskUseCase(sugar, mockTasksRepo, mockProducer)
 
 	task := &models.Task{
 		Method: "GET",
@@ -38,7 +38,7 @@ func TestTaskUseCase_Create(t *testing.T) {
 
 	mockTasksRepo.EXPECT().Create(ctx, gomock.Eq(task)).Return(task, nil).Times(1)
 	called := make(chan struct{}, 1)
-	mockExecutor.EXPECT().ExecuteTask(gomock.Any()).Do(func(task models.Task) {
+	mockProducer.EXPECT().Produce(gomock.Any()).Do(func(task *models.Task) {
 		called <- struct{}{}
 	}).Times(1)
 
@@ -64,9 +64,9 @@ func TestTaskUseCase_CreateWithErrorsNotExecuteTask(t *testing.T) {
 	sugar := zap.New(zapcore.NewNopCore()).Sugar()
 
 	mockTasksRepo := mock.NewMockRepository(ctrx)
-	mockExecutor := mock.NewMockExecutor(ctrx)
+	mockProducer := mock.NewMockProducer(ctrx)
 
-	useCase := NewTaskUseCase(sugar, mockTasksRepo, mockExecutor)
+	useCase := NewTaskUseCase(sugar, mockTasksRepo, mockProducer)
 
 	task := &models.Task{
 		Method: "GET",
@@ -78,7 +78,7 @@ func TestTaskUseCase_CreateWithErrorsNotExecuteTask(t *testing.T) {
 
 	mockTasksRepo.EXPECT().Create(ctx, gomock.Eq(task)).Return(nil, errors.New("error"))
 	called := make(chan struct{}, 1)
-	mockExecutor.EXPECT().ExecuteTask(gomock.Any()).Do(func(task models.Task) {
+	mockProducer.EXPECT().Produce(gomock.Any()).Do(func(task *models.Task) {
 		called <- struct{}{}
 	}).Times(0)
 
@@ -103,9 +103,9 @@ func TestTaskUseCase_CreateWithInvalidMethodNotExecuteTask(t *testing.T) {
 	sugar := zap.New(zapcore.NewNopCore()).Sugar()
 
 	mockTasksRepo := mock.NewMockRepository(ctrx)
-	mockExecutor := mock.NewMockExecutor(ctrx)
+	mockProducer := mock.NewMockProducer(ctrx)
 
-	useCase := NewTaskUseCase(sugar, mockTasksRepo, mockExecutor)
+	useCase := NewTaskUseCase(sugar, mockTasksRepo, mockProducer)
 
 	task := &models.Task{
 		Method: "tersfasd",
@@ -117,7 +117,7 @@ func TestTaskUseCase_CreateWithInvalidMethodNotExecuteTask(t *testing.T) {
 
 	mockTasksRepo.EXPECT().Create(ctx, gomock.Eq(task)).Times(0)
 	called := make(chan struct{}, 1)
-	mockExecutor.EXPECT().ExecuteTask(gomock.Any()).Do(func(task models.Task) {
+	mockProducer.EXPECT().Produce(gomock.Any()).Do(func(task *models.Task) {
 		called <- struct{}{}
 	}).Times(0)
 
@@ -144,9 +144,9 @@ func TestTaskUseCase_CreateWithInvalidUrlNotExecuteTask(t *testing.T) {
 	sugar := zap.New(zapcore.NewNopCore()).Sugar()
 
 	mockTasksRepo := mock.NewMockRepository(ctrx)
-	mockExecutor := mock.NewMockExecutor(ctrx)
+	mockProducer := mock.NewMockProducer(ctrx)
 
-	useCase := NewTaskUseCase(sugar, mockTasksRepo, mockExecutor)
+	useCase := NewTaskUseCase(sugar, mockTasksRepo, mockProducer)
 
 	task := &models.Task{
 		Method: "GET",
@@ -158,7 +158,7 @@ func TestTaskUseCase_CreateWithInvalidUrlNotExecuteTask(t *testing.T) {
 
 	mockTasksRepo.EXPECT().Create(ctx, gomock.Eq(task)).Times(0)
 	called := make(chan struct{}, 1)
-	mockExecutor.EXPECT().ExecuteTask(gomock.Any()).Do(func(task models.Task) {
+	mockProducer.EXPECT().Produce(gomock.Any()).Do(func(task *models.Task) {
 		called <- struct{}{}
 	}).Times(0)
 
@@ -185,9 +185,9 @@ func TestTaskUseCase_GetByIdWithOutputHeadersInvalidId(t *testing.T) {
 	sugar := zap.New(zapcore.NewNopCore()).Sugar()
 
 	mockTasksRepo := mock.NewMockRepository(ctrx)
-	mockExecutor := mock.NewMockExecutor(ctrx)
+	mockProducer := mock.NewMockProducer(ctrx)
 
-	useCase := NewTaskUseCase(sugar, mockTasksRepo, mockExecutor)
+	useCase := NewTaskUseCase(sugar, mockTasksRepo, mockProducer)
 
 	id := int64(-1)
 
@@ -213,9 +213,9 @@ func TestTaskUseCase_GetByIdWithOutputHeadersValidId(t *testing.T) {
 	sugar := zap.New(zapcore.NewNopCore()).Sugar()
 
 	mockTasksRepo := mock.NewMockRepository(ctrx)
-	mockExecutor := mock.NewMockExecutor(ctrx)
+	mockProducer := mock.NewMockProducer(ctrx)
 
-	useCase := NewTaskUseCase(sugar, mockTasksRepo, mockExecutor)
+	useCase := NewTaskUseCase(sugar, mockTasksRepo, mockProducer)
 
 	id := int64(15)
 

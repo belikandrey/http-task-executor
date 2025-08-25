@@ -140,62 +140,6 @@ func (r *TaskRepository) UpdateStatus(ctx context.Context, id int64, newStatus s
 	return nil
 }
 
-func (r *TaskRepository) UpdateResult(ctx context.Context, task *models.Task) error {
-	tx, err := r.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelRepeatableRead})
-	if err != nil {
-		return errors.Wrap(err, "TaskRepository.UpdateResult.BeginTx")
-	}
-
-	prepare, err := tx.PrepareContext(ctx, "UPDATE task SET status = $1, response_status_code = $2, response_length = $3 WHERE id = $4")
-	if err != nil {
-		err1 := tx.Rollback()
-		if err1 != nil {
-			return errors.Wrap(err1, "TaskRepository.UpdateResult.PrepareContext.Rollback")
-		}
-		return errors.Wrap(err, "TaskRepository.UpdateResult.PrepareContext")
-	}
-	res, err := prepare.ExecContext(ctx, task.Status, task.ResponseStatus, task.ResponseLength, task.Id)
-	if err != nil {
-		err1 := tx.Rollback()
-		if err1 != nil {
-			return errors.Wrap(err1, "TaskRepository.UpdateResult.ExecContext.Rollback")
-		}
-		return errors.Wrap(err, "TaskRepository.UpdateResult.ExecContext")
-	}
-
-	affected, err := res.RowsAffected()
-
-	if err != nil {
-		return errors.Wrap(err, "TaskRepository.UpdateResult.RowsAffected")
-	}
-
-	if affected == 0 {
-		return sql.ErrNoRows
-	}
-
-	outputHeaders := make([]models.Header, 0)
-	for _, header := range task.Headers {
-		if !header.Input {
-			outputHeaders = append(outputHeaders, header)
-		}
-	}
-	err = createHeaders(ctx, tx, task.Id, outputHeaders)
-	if err != nil {
-		err1 := tx.Rollback()
-		if err1 != nil {
-			return errors.Wrap(err1, "TaskRepository.UpdateResult.createHeaders.Rollback")
-		}
-		return errors.Wrap(err, "TaskRepository.UpdateResult.createHeaders")
-	}
-
-	err = tx.Commit()
-	if err != nil {
-		return errors.Wrap(err, "TaskRepository.UpdateResult.Commit")
-	}
-
-	return nil
-}
-
 func createHeaders(ctx context.Context, tx *sql.Tx, taskId int64, headers []models.Header) error {
 	if len(headers) == 0 {
 		return nil

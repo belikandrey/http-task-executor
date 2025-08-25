@@ -12,7 +12,7 @@ package mock
 import (
 	context "context"
 	reflect "reflect"
-	models "task-service/internal/models"
+	models "task-executor/internal/models"
 
 	gomock "go.uber.org/mock/gomock"
 )
@@ -41,34 +41,18 @@ func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder {
 	return m.recorder
 }
 
-// Create mocks base method.
-func (m *MockRepository) Create(ctx context.Context, task *models.Task) (*models.Task, error) {
+// UpdateResult mocks base method.
+func (m *MockRepository) UpdateResult(ctx context.Context, task *models.Task) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Create", ctx, task)
-	ret0, _ := ret[0].(*models.Task)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret := m.ctrl.Call(m, "UpdateResult", ctx, task)
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
-// Create indicates an expected call of Create.
-func (mr *MockRepositoryMockRecorder) Create(ctx, task any) *gomock.Call {
+// UpdateResult indicates an expected call of UpdateResult.
+func (mr *MockRepositoryMockRecorder) UpdateResult(ctx, task any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockRepository)(nil).Create), ctx, task)
-}
-
-// GetByIdWithOutputHeaders mocks base method.
-func (m *MockRepository) GetByIdWithOutputHeaders(ctx context.Context, id int64) (*models.Task, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetByIdWithOutputHeaders", ctx, id)
-	ret0, _ := ret[0].(*models.Task)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetByIdWithOutputHeaders indicates an expected call of GetByIdWithOutputHeaders.
-func (mr *MockRepositoryMockRecorder) GetByIdWithOutputHeaders(ctx, id any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByIdWithOutputHeaders", reflect.TypeOf((*MockRepository)(nil).GetByIdWithOutputHeaders), ctx, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateResult", reflect.TypeOf((*MockRepository)(nil).UpdateResult), ctx, task)
 }
 
 // UpdateStatus mocks base method.
