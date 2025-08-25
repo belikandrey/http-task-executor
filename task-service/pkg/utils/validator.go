@@ -3,9 +3,9 @@ package utils
 import (
 	"context"
 	"github.com/go-playground/validator/v10"
-	"http-task-executor/pkg/errors/general/validation"
 	"net/http"
 	"strings"
+	"task-service/pkg/errors/general/validation"
 )
 
 var validate *validator.Validate

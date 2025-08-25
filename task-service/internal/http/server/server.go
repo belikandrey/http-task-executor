@@ -6,12 +6,13 @@ import (
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/jmoiron/sqlx"
-	"http-task-executor/internal/config"
-	"http-task-executor/internal/logger"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
+	"task-service/internal/config"
+	"task-service/internal/logger"
+	"task-service/internal/tasks"
 	"time"
 )
 
@@ -21,10 +22,11 @@ type Server struct {
 	config   *config.Config
 	database *sqlx.DB
 	logger   logger.Logger
+	producer tasks.Producer
 }
 
-func NewServer(config *config.Config, database *sqlx.DB, logger logger.Logger) *Server {
-	return &Server{config: config, database: database, logger: logger}
+func NewServer(config *config.Config, database *sqlx.DB, logger logger.Logger, producer tasks.Producer) *Server {
+	return &Server{config: config, database: database, logger: logger, producer: producer}
 }
 
 func (s *Server) Start() error {

@@ -8,10 +8,10 @@ import (
 	"go.uber.org/mock/gomock"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"http-task-executor/internal/models"
-	"http-task-executor/internal/tasks/mock"
-	errorsHttp "http-task-executor/pkg/errors/http"
 	"net/http"
+	"task-service/internal/models"
+	"task-service/internal/tasks/mock"
+	errorsHttp "task-service/pkg/errors/http"
 	"testing"
 	"time"
 )

@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
-	"http-task-executor/internal/logger"
-	"http-task-executor/internal/models"
 	"strings"
+	"task-service/internal/logger"
+	"task-service/internal/models"
 )
 
 type TaskRepository struct {
@@ -21,7 +21,7 @@ func NewRepository(db *sqlx.DB, log logger.Logger) *TaskRepository {
 }
 
 func (r *TaskRepository) Create(ctx context.Context, task *models.Task) (*models.Task, error) {
-	tx, err := r.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
+	tx, err := r.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelRepeatableRead})
 	if err != nil {
 		return nil, errors.Wrap(err, "TaskRepository.Create.BeginTx")
 	}
@@ -141,7 +141,7 @@ func (r *TaskRepository) UpdateStatus(ctx context.Context, id int64, newStatus s
 }
 
 func (r *TaskRepository) UpdateResult(ctx context.Context, task *models.Task) error {
-	tx, err := r.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
+	tx, err := r.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelRepeatableRead})
 	if err != nil {
 		return errors.Wrap(err, "TaskRepository.UpdateResult.BeginTx")
 	}

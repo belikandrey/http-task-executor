@@ -2,13 +2,14 @@ package main
 
 import (
 	"github.com/jmoiron/sqlx"
-	_ "http-task-executor/docs"
-	"http-task-executor/internal/config"
-	"http-task-executor/internal/http/server"
-	"http-task-executor/internal/logger"
-	"http-task-executor/internal/migration"
-	"http-task-executor/internal/postgres"
 	"log"
+	_ "task-service/docs"
+	"task-service/internal/config"
+	"task-service/internal/http/server"
+	"task-service/internal/logger"
+	"task-service/internal/migration"
+	"task-service/internal/postgres"
+	"task-service/internal/tasks/producer"
 )
 
 // @title Task executor Rest API
@@ -52,7 +53,15 @@ func main() {
 		appLogger.Infof("Database migrated successfully")
 	}
 
-	httpServer := server.NewServer(appConfig, database, appLogger)
+	produce, err := producer.NewTaskProducer(appConfig, appLogger)
+	if err != nil {
+		appLogger.Fatalf("Init kafka producer error: %v", err)
+	}
+	defer func() {
+		produce.Close()
+	}()
+
+	httpServer := server.NewServer(appConfig, database, appLogger, produce)
 
 	if err := httpServer.Start(); err != nil {
 		appLogger.Fatal("Start server error: %v", err)

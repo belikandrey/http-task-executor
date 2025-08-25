@@ -1,9 +1,10 @@
-env: "local"
+env: "prod"
 
 http_server:
+  host: localhost
   port: 8081
-  read_timeout: "15s"
-  write_timeout: "15s"
+  read_timeout: "5s"
+  write_timeout: "5s"
 
 external_service_timeout : "30s"
 
@@ -20,3 +21,8 @@ logger:
   filename: "./logs/task_executor_http.log"
   format: "json"
   level: "info"
+
+kafka:
+  addresses:
+    - "localhost:9091"
+  topic: "task-topic"

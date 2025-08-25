@@ -8,19 +8,11 @@ import (
 )
 
 type Config struct {
-	Env                    string           `yaml:"env" env-required:"true"`
-	ServerConfig           HttpServerConfig `yaml:"http_server"`
-	Postgres               PostgresConfig   `yaml:"postgres"`
-	LoggerConfig           LoggerConfig     `yaml:"logger"`
-	ExternalServiceTimeout time.Duration    `yaml:"external_service_timeout"`
-	KafkaCfg               KafkaConfig      `yaml:"kafka"`
-}
-
-type HttpServerConfig struct {
-	Host         string        `yaml:"host" env-required:"true"`
-	Port         int64         `yaml:"port" env-required:"true"`
-	ReadTimeout  time.Duration `yaml:"read_timeout" env-default:"5s"`
-	WriteTimeout time.Duration `yaml:"write_timeout" env-default:"5s"`
+	Env                    string         `yaml:"env" env-required:"true"`
+	Postgres               PostgresConfig `yaml:"postgres"`
+	LoggerConfig           LoggerConfig   `yaml:"logger"`
+	KafkaCfg               KafkaConfig    `yaml:"kafka"`
+	ExternalServiceTimeout time.Duration  `yaml:"external_service_timeout"`
 }
 
 type PostgresConfig struct {
@@ -40,8 +32,9 @@ type LoggerConfig struct {
 }
 
 type KafkaConfig struct {
-	Addresses []string `yaml:"addresses" env-required:"true"`
-	Topic     string   `yaml:"topic" env-required:"true"`
+	Addresses     []string `yaml:"addresses" env-required:"true"`
+	Topic         string   `yaml:"topic" env-required:"true"`
+	ConsumerGroup string   `yaml:"consumer_group" env-required:"true"`
 }
 
 func MustLoad() *Config {

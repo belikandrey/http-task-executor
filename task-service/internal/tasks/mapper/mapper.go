@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"http-task-executor/internal/models"
-	"http-task-executor/internal/tasks/delivery/http/dto"
+	"task-service/internal/models"
+	"task-service/internal/tasks/delivery/http/dto"
 )
 
 func MapRequestToTask(req *dto.NewTaskRequest) models.Task {
@@ -35,4 +35,19 @@ func MapTaskToGetResponse(task *models.Task) dto.GetTaskResponse {
 		}
 	}
 	return response
+}
+
+func MapTaskToKafkaTaskMessage(task *models.Task) dto.KafkaTaskMessage {
+	message := dto.KafkaTaskMessage{
+		ID:     task.Id,
+		Method: task.Method,
+		Url:    task.Url,
+	}
+	message.Headers = make(map[string]string)
+	if len(task.Headers) > 0 {
+		for _, header := range task.Headers {
+			message.Headers[header.Name] = header.Value
+		}
+	}
+	return message
 }

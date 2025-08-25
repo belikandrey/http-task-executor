@@ -2,7 +2,7 @@ package logger
 
 import (
 	"os"
-	"task-service/internal/config"
+	"task-executor/internal/config"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"

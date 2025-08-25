@@ -4,22 +4,22 @@ import (
 	"context"
 	"github.com/go-playground/validator/v10"
 	"github.com/pkg/errors"
-	"http-task-executor/internal/logger"
-	"http-task-executor/internal/models"
-	"http-task-executor/internal/tasks"
-	"http-task-executor/pkg/errors/general/validation"
-	httpErrors "http-task-executor/pkg/errors/http"
-	"http-task-executor/pkg/utils"
+	"task-service/internal/logger"
+	"task-service/internal/models"
+	"task-service/internal/tasks"
+	"task-service/pkg/errors/general/validation"
+	httpErrors "task-service/pkg/errors/http"
+	"task-service/pkg/utils"
 )
 
 type TaskUseCase struct {
-	log  logger.Logger
-	repo tasks.Repository
-	exec tasks.Executor
+	log      logger.Logger
+	repo     tasks.Repository
+	producer tasks.Producer
 }
 
-func NewTaskUseCase(log logger.Logger, repo tasks.Repository, exec tasks.Executor) *TaskUseCase {
-	return &TaskUseCase{log: log, repo: repo, exec: exec}
+func NewTaskUseCase(log logger.Logger, repo tasks.Repository, producer tasks.Producer) *TaskUseCase {
+	return &TaskUseCase{log: log, repo: repo, producer: producer}
 }
 
 func (t *TaskUseCase) Create(ctx context.Context, task *models.Task) (*models.Task, error) {
@@ -34,8 +34,14 @@ func (t *TaskUseCase) Create(ctx context.Context, task *models.Task) (*models.Ta
 		return nil, err
 	}
 
-	go t.exec.ExecuteTask(*create)
-
+	err = t.producer.Produce(create)
+	if err != nil {
+		errInternal := t.repo.UpdateStatus(ctx, create.Id, models.StatusError)
+		if errInternal != nil {
+			return nil, errInternal
+		}
+		return nil, err
+	}
 	return create, nil
 }
 
@@ -52,17 +58,17 @@ func (t *TaskUseCase) GetByIdWithOutputHeaders(ctx context.Context, id int64) (*
 }
 
 func validateTask(ctx context.Context, task *models.Task) []validation.ValidationError {
-	errors := make([]validation.ValidationError, 0)
+	errs := make([]validation.ValidationError, 0)
 	err := utils.ValidateStruct(ctx, task)
 	if err != nil {
 		validateErr := err.(validator.ValidationErrors)
 		for _, err1 := range validateErr {
-			errors = append(errors, err1.(validation.ValidationError))
+			errs = append(errs, err1.(validation.ValidationError))
 		}
 	}
 	errMethod := utils.ValidateHttpMethod(task.Method)
 	if errMethod != nil {
-		errors = append(errors, errMethod)
+		errs = append(errs, errMethod)
 	}
-	return errors
+	return errs
 }

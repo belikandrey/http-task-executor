@@ -4,7 +4,7 @@ import (
 	"fmt"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/jmoiron/sqlx"
-	"task-service/internal/config"
+	"task-executor/internal/config"
 	"time"
 )
 

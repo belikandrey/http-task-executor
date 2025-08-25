@@ -1,9 +1,10 @@
-module http-task-executor
+module task-service
 
 go 1.24.5
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.2
+	github.com/confluentinc/confluent-kafka-go/v2 v2.11.1
 	github.com/go-chi/chi/v5 v5.2.2
 	github.com/go-chi/render v1.0.3
 	github.com/go-playground/validator/v10 v10.27.0
@@ -42,6 +43,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/sethvargo/go-retry v0.3.0 // indirect
 	github.com/swaggo/files v1.0.1 // indirect
+	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/crypto v0.41.0 // indirect
 	golang.org/x/mod v0.27.0 // indirect
