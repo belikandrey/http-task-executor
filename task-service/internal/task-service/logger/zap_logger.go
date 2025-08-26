@@ -8,21 +8,35 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
+// Logger represents application logger.
 type Logger interface {
+	// Debug - print log with debug level
 	Debug(args ...interface{})
+	// Debugf - print formatted log with debug level
 	Debugf(template string, args ...interface{})
+	// Info - print formatted log with info level
 	Info(args ...interface{})
+	// Infof - print formatted log with info level
 	Infof(template string, args ...interface{})
+	// Warn - print log with warn level
 	Warn(args ...interface{})
+	// Warnf - print formatted log with warn level
 	Warnf(template string, args ...interface{})
+	// Error - print log with error level
 	Error(args ...interface{})
+	// Errorf - print formatted log with error level
 	Errorf(template string, args ...interface{})
+	// DPanic - print log with error level and panic
 	DPanic(args ...interface{})
+	// DPanicf - print formatted log with error level and panic
 	DPanicf(template string, args ...interface{})
+	// Fatal - print log with error level and os.Exit
 	Fatal(args ...interface{})
+	// Fatalf - print formatted log with error level and os.Exit
 	Fatalf(template string, args ...interface{})
 }
 
+// NewLogger creates new instance of Logger.
 func NewLogger(config *config.Config) (Logger, error) {
 
 	file, err := os.OpenFile(config.LoggerConfig.Filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)

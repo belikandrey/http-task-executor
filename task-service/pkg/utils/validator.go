@@ -14,10 +14,12 @@ func init() {
 	validate = validator.New()
 }
 
+// ValidateStruct validates struct and returns error
 func ValidateStruct(ctx context.Context, data interface{}) error {
 	return validate.StructCtx(ctx, data)
 }
 
+// ValidateHttpMethod checks if http method is valid
 func ValidateHttpMethod(method string) validation.TaskValidationError {
 	method = strings.ToUpper(method)
 

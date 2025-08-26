@@ -1,6 +1,6 @@
 package dto
 
-// KafkaTaskMessage presents message received from Kafka.
+// KafkaTaskMessage represents message received from Kafka.
 // It contains ID, Method, URL, Headers.
 type KafkaTaskMessage struct {
 	// ID - unique identifier of task.

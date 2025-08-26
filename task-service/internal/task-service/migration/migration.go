@@ -6,6 +6,7 @@ import (
 	root "http-task-executor/task-service"
 )
 
+// MigratePostgresql runs migrations in database.
 func MigratePostgresql(db *sqlx.DB) error {
 
 	goose.SetBaseFS(root.MigrationFS)

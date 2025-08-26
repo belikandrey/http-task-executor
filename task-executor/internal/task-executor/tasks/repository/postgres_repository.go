@@ -11,15 +11,18 @@ import (
 	"strings"
 )
 
+// TaskRepository represents db repository to work with models.Task.
 type TaskRepository struct {
 	db  *sqlx.DB
 	log logger.Logger
 }
 
+// NewRepository - creates new instance of TaskRepository.
 func NewRepository(db *sqlx.DB, log logger.Logger) *TaskRepository {
 	return &TaskRepository{db: db, log: log}
 }
 
+// UpdateResult updates task result fields.
 func (r *TaskRepository) UpdateResult(ctx context.Context, task *models.Task) error {
 	tx, err := r.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelRepeatableRead})
 	if err != nil {
@@ -76,6 +79,7 @@ func (r *TaskRepository) UpdateResult(ctx context.Context, task *models.Task) er
 	return nil
 }
 
+// UpdateStatus updates task status field.
 func (r *TaskRepository) UpdateStatus(ctx context.Context, id int64, newStatus string) error {
 	prepareContext, err := r.db.PrepareContext(ctx, "UPDATE task SET status=$1 WHERE id=$2")
 	if err != nil {

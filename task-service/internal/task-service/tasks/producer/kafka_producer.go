@@ -13,7 +13,7 @@ import (
 
 const flushTimeout = 5000
 
-// TaskProducer presents message producer to Kafka.
+// TaskProducer represents message producer to Kafka.
 type TaskProducer struct {
 	// producer - kafka producer implementation
 	producer *kafka.Producer

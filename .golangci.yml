@@ -1,28 +1,42 @@
-run:
-  # Timeout for analysis
-  timeout: 3m
-  # Exit code when at least one issue was found.
-  issues-exit-code: 1
-  # Include test files or not.
-  tests: false
-  # Allow multiple parallel golangci-lint instances running.
-  # If false (default) - golangci-lint acquires file lock on start.
-  allow-parallel-runners: true
-
-  go: '1.24.5'
+version: "2"
 
 linters:
-  # List of enabled linters.
   default: all
+
+  # Disable specific linters.
   disable:
     - depguard
     - exhaustruct
+
   settings:
     revive:
+      # Enable all available rules.
+      # Default: false
       enable-all-rules: true
+
       rules:
-        - name: package-comments
-          disabled: true
         - name: line-length-limit
+          severity: warning
           disabled: true
-version: "2"
+        - name: package-comments
+          severity: warning
+          disabled: true
+
+  exclusions:
+    paths:
+      - ".*\\.mock\\.go$"
+      - "^mock/.*"
+
+formatters:
+  enable:
+    - gofmt
+  exclusions:
+    paths:
+      - ".*\\.mock\\.go$"
+      - "^mock/.*"
+run:
+  timeout: 5m
+  tests: false
+  allow-parallel-runners: true
+  allow-serial-runners: true
+  go: '1.24'

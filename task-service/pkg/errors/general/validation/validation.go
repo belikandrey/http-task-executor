@@ -1,13 +1,13 @@
 package validation
 
-// TaskValidationError presents custom error on validation fields.
+// TaskValidationError represents custom error on validation fields.
 type TaskValidationError interface {
 	Error() string
 	Field() string
 	ActualTag() string
 }
 
-// CustomFiledError presents implementation of TaskValidationError for using in fields validation.
+// CustomFiledError represents implementation of TaskValidationError for using in fields validation.
 type CustomFiledError struct {
 	Fld string `json:"field"`
 	Msg string `json:"message"`

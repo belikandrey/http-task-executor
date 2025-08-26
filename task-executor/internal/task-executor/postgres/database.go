@@ -5,16 +5,9 @@ import (
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/jmoiron/sqlx"
 	"http-task-executor/task-executor/internal/task-executor/config"
-	"time"
 )
 
-const (
-	maxOpenConnections    = 30
-	connectionMaxLifetime = 100 * time.Second
-	maxIdleConnections    = 10
-	connectionMaxIdleTime = 10 * time.Second
-)
-
+// NewPostgresqlDatabase creates new database instance
 func NewPostgresqlDatabase(c *config.Config) (*sqlx.DB, error) {
 	dbUrl := fmt.Sprintf("host=%s port=%d user=%s dbname=%s sslmode=%s password=%s",
 		c.Postgres.Host,
@@ -29,10 +22,10 @@ func NewPostgresqlDatabase(c *config.Config) (*sqlx.DB, error) {
 		return nil, err
 	}
 
-	db.SetMaxOpenConns(maxOpenConnections)
-	db.SetConnMaxLifetime(connectionMaxLifetime)
-	db.SetMaxIdleConns(maxIdleConnections)
-	db.SetConnMaxIdleTime(connectionMaxIdleTime)
+	db.SetMaxOpenConns(int(c.Postgres.MaxOpenConnections))
+	db.SetConnMaxLifetime(c.Postgres.ConnectionMaxLifetime)
+	db.SetMaxIdleConns(int(c.Postgres.MaxIdleConnections))
+	db.SetConnMaxIdleTime(c.Postgres.ConnectionMaxIdleTime)
 
 	if err := db.Ping(); err != nil {
 		return nil, err

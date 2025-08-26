@@ -13,25 +13,34 @@ import (
 	"time"
 )
 
+// Executor represents tasks executor.
 type Executor struct {
-	log            logger.Logger
-	repo           tasks2.Repository
-	timeout        time.Duration
+	// log - logger implementation.
+	log logger.Logger
+	// repo - implementation of task repository.
+	repo tasks2.Repository
+	// timeout - timeout for external service response.
+	timeout time.Duration
+	// clientProvider - getter for http.Client
 	clientProvider tasks2.ClientProvider
 }
 
+// ClientProvider represents mechanism for http.Client creation.
 type ClientProvider struct {
 	Timeout time.Duration
 }
 
+// Client creates http.Client.
 func (c *ClientProvider) Client() *http.Client {
 	return &http.Client{Timeout: c.Timeout}
 }
 
+// NewExecutor - creates new instance of Executor.
 func NewExecutor(log logger.Logger, repo tasks2.Repository, clientProvider tasks2.ClientProvider, timeout time.Duration) *Executor {
 	return &Executor{log: log, repo: repo, clientProvider: clientProvider, timeout: timeout}
 }
 
+// Execute - executes task to 3-rd service.
 func (e *Executor) Execute(value []byte) {
 	e.log.Debugf("Executing message: %v", string(value))
 	var message dto.KafkaTaskMessage

@@ -1,17 +1,17 @@
 package models
 
 const (
-	// StatusNew - presents new task status.
+	// StatusNew - represents new task status.
 	StatusNew = "new"
-	// StatusError - presents error task status.
+	// StatusError - represents error task status.
 	StatusError = "error"
-	// StatusInProcess - presents in_process task status.
+	// StatusInProcess - represents in_process task status.
 	StatusInProcess = "in_process"
-	// StatusDone - presents done task status.
+	// StatusDone - represents done task status.
 	StatusDone = "done"
 )
 
-// Task presents task to execute.
+// Task represents task to execute.
 // It contains ID, URL, Method, Status, ResponseStatus, ResponseLength, Headers.
 type Task struct {
 	// ID - unique identifier of task.
@@ -30,7 +30,7 @@ type Task struct {
 	Headers []Header
 }
 
-// Header presents http header.
+// Header represents http header.
 // It contains Name, Value, Input.
 type Header struct {
 	// Name - header name.

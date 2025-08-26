@@ -7,37 +7,70 @@ import (
 	"time"
 )
 
+// Config represents full configuration for app.
 type Config struct {
-	Env                    string         `yaml:"env" env-required:"true"`
-	Postgres               PostgresConfig `yaml:"postgres"`
-	LoggerConfig           LoggerConfig   `yaml:"logger"`
-	KafkaCfg               KafkaConfig    `yaml:"kafka"`
-	ExternalServiceTimeout time.Duration  `yaml:"external_service_timeout" env-required:"true"`
-	ExecutorNumGoroutines  int            `yaml:"executor_num_goroutines" env-required:"true"`
+	// Env - environment name (local/prod).
+	Env string `yaml:"env" env-required:"true"`
+	// Postgres - postgres configuration presented in PostgresConfig.
+	Postgres PostgresConfig `yaml:"postgres"`
+	// LoggerConfig - logger configuration presented in LoggerConfig.
+	LoggerConfig LoggerConfig `yaml:"logger"`
+	// KafkaCfg - kafka configuration presented in KafkaConfig.
+	KafkaCfg KafkaConfig `yaml:"kafka"`
+	// ExternalServiceTimeout - external service timeout time.Duration.
+	ExternalServiceTimeout time.Duration `yaml:"external_service_timeout" env-required:"true"`
+	// ExecutorNumGoroutines - max number of goroutines in executor.
+	ExecutorNumGoroutines int `yaml:"executor_num_goroutines" env-required:"true"`
 }
 
+// PostgresConfig - represents postgres configuration.
 type PostgresConfig struct {
-	Host     string `yaml:"host" env-required:"true"`
-	Port     int64  `yaml:"port" env-required:"true"`
-	Name     string `yaml:"name" env-required:"true"`
-	User     string `yaml:"user" env-required:"true"`
+	// Host - represents postgres server host.
+	Host string `yaml:"host" env-required:"true"`
+	// Port - represents postgres server port.
+	Port int64 `yaml:"port" env-required:"true"`
+	// Name - represents postgres database name.
+	Name string `yaml:"name" env-required:"true"`
+	// User - represents postgres user.
+	User string `yaml:"user" env-required:"true"`
+	// Password - represents postgres password.
 	Password string `yaml:"password" env-required:"true"`
-	SslMode  string `yaml:"sslmode" env-required:"true"`
-	Driver   string `yaml:"driver" env-required:"true"`
+	// SslMode - represents postgres sslmode.
+	SslMode string `yaml:"sslmode" env-required:"true"`
+	// Driver - represents postgres driver.
+	Driver string `yaml:"driver" env-required:"true"`
+	// MaxOpenConnections - number of max db connections.
+	MaxOpenConnections int64 `yaml:"max_open_connections" env-required:"true"`
+	// ConnectionMaxLifetime - max lifetime of connection.
+	ConnectionMaxLifetime time.Duration `yaml:"connection_max_lifetime" env-required:"true"`
+	// MaxIdleConnections - number of max db idle connections.
+	MaxIdleConnections int64 `yaml:"max_idle_connections" env-required:"true"`
+	// ConnectionMaxIdleTime - max lifetime of idle connection.
+	ConnectionMaxIdleTime time.Duration `yaml:"connection_max_idle_time" env-required:"true"`
 }
 
+// LoggerConfig - represents logger configuration.
 type LoggerConfig struct {
+	// Filename - output logger filename.
 	Filename string `yaml:"filename" env-required:"true"`
-	Level    string `yaml:"level" env-required:"true"`
-	Format   string `yaml:"format" env-required:"true"`
+	// Level - logger level.
+	Level string `yaml:"level" env-required:"true"`
+	// Format - logger format (json/text).
+	Format string `yaml:"format" env-required:"true"`
 }
 
+// KafkaConfig - represents kafka configuration.
 type KafkaConfig struct {
-	Addresses     []string `yaml:"addresses" env-required:"true"`
-	Topic         string   `yaml:"topic" env-required:"true"`
-	ConsumerGroup string   `yaml:"consumer_group" env-required:"true"`
+	// Addresses - brokers addresses.
+	Addresses []string `yaml:"addresses" env-required:"true"`
+	// Topic - kafka topic.
+	Topic string `yaml:"topic" env-required:"true"`
+	// ConsumerGroup - kafka consumer group ID.
+	ConsumerGroup string `yaml:"consumer_group" env-required:"true"`
 }
 
+// MustLoad - loads full app configuration and returns *Config.
+// Panic on any error.
 func MustLoad() *Config {
 	path := getConfigPath()
 

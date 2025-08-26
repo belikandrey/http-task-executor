@@ -1,6 +1,6 @@
 package dto
 
-// NewTaskRequest presents request to create new task.
+// NewTaskRequest represents request to create new task.
 // It contains URL, Method, Headers.
 type NewTaskRequest struct {
 	// URL - url to send request.
@@ -11,14 +11,14 @@ type NewTaskRequest struct {
 	Headers map[string]string `json:"headers"`
 }
 
-// NewTaskResponse presents response to create new task request.
+// NewTaskResponse represents response to create new task request.
 // It contains task ID.
 type NewTaskResponse struct {
 	// ID - unique identifier of task.
 	ID int64 `json:"id"`
 }
 
-// GetTaskResponse presents response to get task request.
+// GetTaskResponse represents response to get task request.
 // It contains task ID, Status, ResponseStatus, ResponseLength, Headers.
 type GetTaskResponse struct {
 	// ID - unique identifier of task.
@@ -33,7 +33,7 @@ type GetTaskResponse struct {
 	Headers map[string]string `json:"headers"`
 }
 
-// KafkaTaskMessage presents message received from Kafka.
+// KafkaTaskMessage represents message received from Kafka.
 // It contains ID, Method, URL, Headers.
 type KafkaTaskMessage struct {
 	// ID - unique identifier of task.

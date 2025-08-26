@@ -13,12 +13,14 @@ import (
 	"strconv"
 )
 
+// TaskHandlers represents handlers for router.
 type TaskHandlers struct {
 	cfg     *config.Config
 	useCase tasks.UseCase
 	logger  logger.Logger
 }
 
+// NewTaskHandlers creates a new TaskHandlers instance.
 func NewTaskHandlers(cfg *config.Config, logger logger.Logger, useCase tasks.UseCase) *TaskHandlers {
 	return &TaskHandlers{cfg: cfg, logger: logger, useCase: useCase}
 }

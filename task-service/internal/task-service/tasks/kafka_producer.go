@@ -6,7 +6,7 @@ import (
 	"http-task-executor/task-service/internal/task-service/models"
 )
 
-// Producer presents message producer to Kafka.
+// Producer represents message producer to Kafka.
 type Producer interface {
 	Produce(task *models.Task) error
 }

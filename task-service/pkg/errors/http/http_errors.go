@@ -13,36 +13,46 @@ import (
 )
 
 var (
-	ErrBadRequest          = errors.New("bad request")
-	ErrNotFound            = errors.New("not Found")
+	// ErrBadRequest - bad request error
+	ErrBadRequest = errors.New("bad request")
+	// ErrNotFound - not found error
+	ErrNotFound = errors.New("not Found")
+	// ErrRequestTimeoutError - request timeout error
 	ErrRequestTimeoutError = errors.New("request Timeout")
+	// ErrInternalServerError - internal service error
 	ErrInternalServerError = errors.New("internal Server Error")
 )
 
+// RestErr represents REST error.
 type RestErr interface {
 	Status() int
 	Error() string
 	Causes() interface{}
 }
 
+// RestError represents REST error and implements RestErr.
 type RestError struct {
 	ErrStatus int         `json:"status,omitempty"`
 	ErrError  string      `json:"error,omitempty"`
 	ErrCauses interface{} `json:"-"`
 }
 
+// Error returns formatted error message
 func (e RestError) Error() string {
 	return fmt.Sprintf("status: %d - errors: %s - causes: %v", e.ErrStatus, e.ErrError, e.ErrCauses)
 }
 
+// Status returns http status code
 func (e RestError) Status() int {
 	return e.ErrStatus
 }
 
+// Causes returns causes
 func (e RestError) Causes() interface{} {
 	return e.ErrCauses
 }
 
+// NewBadRequestError creates new bad request error
 func NewBadRequestError(causes interface{}) RestErr {
 	return RestError{
 		ErrStatus: http.StatusBadRequest,
@@ -51,6 +61,7 @@ func NewBadRequestError(causes interface{}) RestErr {
 	}
 }
 
+// NewValidationError creates new validation error
 func NewValidationError(errs []validation.TaskValidationError) RestErr {
 
 	var errMsgs []string
@@ -72,10 +83,12 @@ func NewValidationError(errs []validation.TaskValidationError) RestErr {
 	}
 }
 
+// ErrorResponse returns status code and response object
 func ErrorResponse(err error) (int, interface{}) {
 	return ParseErrors(err).Status(), ParseErrors(err)
 }
 
+// NewRestError creates error
 func NewRestError(status int, err string, causes interface{}) RestErr {
 	return RestError{
 		ErrStatus: status,
@@ -84,6 +97,7 @@ func NewRestError(status int, err string, causes interface{}) RestErr {
 	}
 }
 
+// NewInternalServerError creates internal server error
 func NewInternalServerError(causes interface{}) RestErr {
 	result := RestError{
 		ErrStatus: http.StatusInternalServerError,
@@ -93,6 +107,7 @@ func NewInternalServerError(causes interface{}) RestErr {
 	return result
 }
 
+// ParseErrors parses error and returns RestErr based on error type.
 func ParseErrors(err error) RestErr {
 	var unmarshalTypeError *json.UnmarshalTypeError
 	var jsonSyntaxType *json.SyntaxError

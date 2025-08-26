@@ -11,15 +11,18 @@ import (
 	"strings"
 )
 
+// TaskRepository represents db repository to work with models.Task.
 type TaskRepository struct {
 	db  *sqlx.DB
 	log logger.Logger
 }
 
+// NewRepository - creates new instance of TaskRepository.
 func NewRepository(db *sqlx.DB, log logger.Logger) *TaskRepository {
 	return &TaskRepository{db: db, log: log}
 }
 
+// Create creates new task.
 func (r *TaskRepository) Create(ctx context.Context, task *models.Task) (*models.Task, error) {
 	tx, err := r.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelRepeatableRead})
 	if err != nil {
@@ -67,6 +70,7 @@ func (r *TaskRepository) Create(ctx context.Context, task *models.Task) (*models
 	return task, nil
 }
 
+// GetByIdWithOutputHeaders returns models.Task by requested ID.
 func (r *TaskRepository) GetByIdWithOutputHeaders(ctx context.Context, id int64) (*models.Task, error) {
 	prepareContext, err := r.db.PrepareContext(ctx, `SELECT t.id,
        								t.url as url,
@@ -119,6 +123,7 @@ func (r *TaskRepository) GetByIdWithOutputHeaders(ctx context.Context, id int64)
 	return task, nil
 }
 
+// UpdateStatus updates task status field.
 func (r *TaskRepository) UpdateStatus(ctx context.Context, id int64, newStatus string) error {
 	prepareContext, err := r.db.PrepareContext(ctx, "UPDATE task SET status=$1 WHERE id=$2")
 	if err != nil {
@@ -140,6 +145,7 @@ func (r *TaskRepository) UpdateStatus(ctx context.Context, id int64, newStatus s
 	return nil
 }
 
+// Delete deletes task by ID.
 func (r *TaskRepository) Delete(ctx context.Context, id int64) error {
 	prepareContext, err := r.db.PrepareContext(ctx, "DELETE FROM task WHERE id=$1")
 	if err != nil {

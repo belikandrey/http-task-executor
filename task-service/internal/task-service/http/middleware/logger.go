@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// New creates new logger middleware that adds logging in http requests.
 func New(log logger.Logger) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		log.Info("logger middleware enabled")

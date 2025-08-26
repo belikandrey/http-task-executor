@@ -14,15 +14,23 @@ const (
 	withoutTimeout = -1
 )
 
+// KafkaConsumer represents kafka consumer that consumes messages from kafka and send to executor.
 type KafkaConsumer struct {
-	executor      tasks.Executor
-	consumer      *kafka.Consumer
-	topic         string
+	// executor - implementation of tasks.Executor.
+	executor tasks.Executor
+	// consumer - kafka consumer.
+	consumer *kafka.Consumer
+	// topic - kafka topic name.
+	topic string
+	// consumerGroup - kafka consumer group ID.
 	consumerGroup string
-	logger        logger.Logger
-	pool          *pool.Pool
+	// logger - logger implementation.
+	logger logger.Logger
+	// pool - workers pool.
+	pool *pool.Pool
 }
 
+// NewKafkaConsumer - creates new KafkaConsumer.
 func NewKafkaConsumer(config *config.Config, executor tasks.Executor, logger logger.Logger) (*KafkaConsumer, error) {
 	cfg := &kafka.ConfigMap{
 		"bootstrap.servers":        strings.Join(config.KafkaCfg.Addresses, ","),
@@ -47,6 +55,7 @@ func NewKafkaConsumer(config *config.Config, executor tasks.Executor, logger log
 	return &KafkaConsumer{executor: executor, consumer: consumer, topic: config.KafkaCfg.Topic, logger: logger, pool: newPool}, nil
 }
 
+// Start started receiving messages from kafka and send to executor.
 func (k *KafkaConsumer) Start(ctx context.Context) {
 	k.logger.Info("Starting consumer")
 	for {
@@ -77,6 +86,7 @@ func (k *KafkaConsumer) consumeMessages() {
 	})
 }
 
+// Close shutting down kafka consumer properly.
 func (k *KafkaConsumer) Close(cancel context.CancelFunc) error {
 	k.logger.Info("Shutting down consumer")
 

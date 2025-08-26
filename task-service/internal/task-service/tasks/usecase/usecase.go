@@ -12,16 +12,19 @@ import (
 	"http-task-executor/task-service/pkg/utils"
 )
 
+// TaskUseCase represents service layer to models.Task.
 type TaskUseCase struct {
 	log      logger.Logger
 	repo     tasks2.Repository
 	producer tasks2.Producer
 }
 
+// NewTaskUseCase creates new instance of TaskUseCase.
 func NewTaskUseCase(log logger.Logger, repo tasks2.Repository, producer tasks2.Producer) *TaskUseCase {
 	return &TaskUseCase{log: log, repo: repo, producer: producer}
 }
 
+// Create creates new task and send to producer.
 func (t *TaskUseCase) Create(ctx context.Context, task *models.Task) (*models.Task, error) {
 
 	validationErrors := validateTask(ctx, task)
@@ -45,6 +48,7 @@ func (t *TaskUseCase) Create(ctx context.Context, task *models.Task) (*models.Ta
 	return create, nil
 }
 
+// GetByIdWithOutputHeaders returns models.Task by requested ID.
 func (t *TaskUseCase) GetByIdWithOutputHeaders(ctx context.Context, id int64) (*models.Task, error) {
 	if id <= 0 {
 		return nil, httpErrors.NewBadRequestError(errors.New("invalid id"))

@@ -18,6 +18,7 @@ import (
 
 const shutdownTimeout = 5 * time.Second
 
+// Server represents http server.
 type Server struct {
 	config   *config.Config
 	database *sqlx.DB
@@ -25,10 +26,12 @@ type Server struct {
 	producer tasks.Producer
 }
 
+// NewServer creates a new Server instance.
 func NewServer(config *config.Config, database *sqlx.DB, logger logger.Logger, producer tasks.Producer) *Server {
 	return &Server{config: config, database: database, logger: logger, producer: producer}
 }
 
+// Start starts http server.
 func (s *Server) Start() error {
 	s.logger.Infof("Starting server on port %d", s.config.ServerConfig.Port)
 

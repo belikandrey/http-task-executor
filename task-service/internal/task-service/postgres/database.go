@@ -7,6 +7,7 @@ import (
 	"http-task-executor/task-service/internal/task-service/config"
 )
 
+// NewPostgresqlDatabase creates new database instance
 func NewPostgresqlDatabase(c *config.Config) (*sqlx.DB, error) {
 	dbUrl := fmt.Sprintf("host=%s port=%d user=%s dbname=%s sslmode=%s password=%s",
 		c.Postgres.Host,
