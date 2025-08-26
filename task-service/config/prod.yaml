@@ -16,6 +16,10 @@ postgres:
   driver: "pgx"
   user: "task_executor_user"
   password: "1234"
+  max_open_connections: 30
+  connection_max_lifetime: "100s"
+  max_idle_connections: 10
+  connection_max_idle_time: "10s"
 
 logger:
   filename: "./logs/task_executor_http.log"
