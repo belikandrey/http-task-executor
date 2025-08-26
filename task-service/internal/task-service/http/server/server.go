@@ -6,13 +6,13 @@ import (
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/jmoiron/sqlx"
+	"http-task-executor/task-service/internal/task-service/config"
+	"http-task-executor/task-service/internal/task-service/logger"
+	"http-task-executor/task-service/internal/task-service/tasks"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
-	"task-service/internal/task-service/config"
-	"task-service/internal/task-service/logger"
-	"task-service/internal/task-service/tasks"
 	"time"
 )
 

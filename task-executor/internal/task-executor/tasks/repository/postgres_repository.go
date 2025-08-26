@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
+	"http-task-executor/task-executor/internal/task-executor/logger"
+	"http-task-executor/task-executor/internal/task-executor/models"
 	"strings"
-	"task-executor/internal/task-executor/logger"
-	"task-executor/internal/task-executor/models"
 )
 
 type TaskRepository struct {

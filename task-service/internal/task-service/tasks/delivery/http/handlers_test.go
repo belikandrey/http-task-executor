@@ -11,11 +11,11 @@ import (
 	"go.uber.org/mock/gomock"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"http-task-executor/task-service/internal/task-service/models"
+	"http-task-executor/task-service/internal/task-service/tasks/delivery/http/dto"
+	"http-task-executor/task-service/internal/task-service/tasks/mock"
 	"net/http"
 	"net/http/httptest"
-	"task-service/internal/task-service/models"
-	"task-service/internal/task-service/tasks/delivery/http/dto"
-	"task-service/internal/task-service/tasks/mock"
 	"testing"
 )
 

@@ -3,13 +3,13 @@ package executor
 import (
 	"context"
 	"encoding/json"
+	"http-task-executor/task-executor/internal/task-executor/dto"
+	"http-task-executor/task-executor/internal/task-executor/logger"
+	"http-task-executor/task-executor/internal/task-executor/models"
+	tasks2 "http-task-executor/task-executor/internal/task-executor/tasks"
 	"io"
 	"net/http"
 	"strings"
-	"task-executor/internal/task-executor/dto"
-	"task-executor/internal/task-executor/logger"
-	"task-executor/internal/task-executor/models"
-	tasks2 "task-executor/internal/task-executor/tasks"
 	"time"
 )
 

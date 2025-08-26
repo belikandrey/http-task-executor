@@ -10,8 +10,8 @@
 package mock
 
 import (
+	"http-task-executor/task-service/internal/task-service/models"
 	reflect "reflect"
-	"task-service/internal/task-service/models"
 
 	gomock "go.uber.org/mock/gomock"
 )

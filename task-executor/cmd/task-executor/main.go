@@ -2,16 +2,16 @@ package main
 
 import (
 	"context"
+	"http-task-executor/task-executor/internal/task-executor/config"
+	"http-task-executor/task-executor/internal/task-executor/logger"
+	"http-task-executor/task-executor/internal/task-executor/postgres"
+	"http-task-executor/task-executor/internal/task-executor/tasks/consumer"
+	"http-task-executor/task-executor/internal/task-executor/tasks/executor"
+	"http-task-executor/task-executor/internal/task-executor/tasks/repository"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
-	"task-executor/internal/task-executor/config"
-	"task-executor/internal/task-executor/logger"
-	"task-executor/internal/task-executor/postgres"
-	"task-executor/internal/task-executor/tasks/consumer"
-	"task-executor/internal/task-executor/tasks/executor"
-	"task-executor/internal/task-executor/tasks/repository"
 )
 
 func main() {

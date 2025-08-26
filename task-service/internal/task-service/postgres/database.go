@@ -4,7 +4,7 @@ import (
 	"fmt"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/jmoiron/sqlx"
-	"task-service/internal/task-service/config"
+	"http-task-executor/task-service/internal/task-service/config"
 )
 
 func NewPostgresqlDatabase(c *config.Config) (*sqlx.DB, error) {

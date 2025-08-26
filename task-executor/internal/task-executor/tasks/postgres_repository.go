@@ -3,7 +3,7 @@ package tasks
 
 import (
 	"context"
-	"task-executor/internal/task-executor/models"
+	"http-task-executor/task-executor/internal/task-executor/models"
 )
 
 type Repository interface {

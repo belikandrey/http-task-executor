@@ -3,7 +3,7 @@
 package tasks
 
 import (
-	"task-service/internal/task-service/models"
+	"http-task-executor/task-service/internal/task-service/models"
 )
 
 type Producer interface {

@@ -2,14 +2,14 @@ package main
 
 import (
 	"github.com/jmoiron/sqlx"
+	_ "http-task-executor/task-service/docs"
+	"http-task-executor/task-service/internal/task-service/config"
+	"http-task-executor/task-service/internal/task-service/http/server"
+	"http-task-executor/task-service/internal/task-service/logger"
+	"http-task-executor/task-service/internal/task-service/migration"
+	"http-task-executor/task-service/internal/task-service/postgres"
+	"http-task-executor/task-service/internal/task-service/tasks/producer"
 	"log"
-	_ "task-service/docs"
-	"task-service/internal/task-service/config"
-	"task-service/internal/task-service/http/server"
-	"task-service/internal/task-service/logger"
-	"task-service/internal/task-service/migration"
-	"task-service/internal/task-service/postgres"
-	"task-service/internal/task-service/tasks/producer"
 )
 
 // @title Task executor Rest API

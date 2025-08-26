@@ -4,10 +4,10 @@ import (
 	"context"
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/sourcegraph/conc/pool"
+	"http-task-executor/task-executor/internal/task-executor/config"
+	"http-task-executor/task-executor/internal/task-executor/logger"
+	"http-task-executor/task-executor/internal/task-executor/tasks"
 	"strings"
-	"task-executor/internal/task-executor/config"
-	"task-executor/internal/task-executor/logger"
-	"task-executor/internal/task-executor/tasks"
 )
 
 const (

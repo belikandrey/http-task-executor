@@ -4,10 +4,10 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	httpSwagger "github.com/swaggo/http-swagger"
-	mw "task-service/internal/task-service/http/middleware"
-	"task-service/internal/task-service/tasks/delivery/http"
-	"task-service/internal/task-service/tasks/repository"
-	"task-service/internal/task-service/tasks/usecase"
+	mw "http-task-executor/task-service/internal/task-service/http/middleware"
+	"http-task-executor/task-service/internal/task-service/tasks/delivery/http"
+	"http-task-executor/task-service/internal/task-service/tasks/repository"
+	"http-task-executor/task-service/internal/task-service/tasks/usecase"
 	"time"
 )
 

@@ -3,7 +3,7 @@ package migration
 import (
 	"github.com/jmoiron/sqlx"
 	"github.com/pressly/goose/v3"
-	root "task-service"
+	root "http-task-executor/task-service"
 )
 
 func MigratePostgresql(db *sqlx.DB) error {

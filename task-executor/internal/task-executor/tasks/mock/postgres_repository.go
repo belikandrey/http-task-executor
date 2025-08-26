@@ -11,8 +11,8 @@ package mock
 
 import (
 	context "context"
-	reflect "reflect"
-	"task-executor/internal/task-executor/models"
+	"http-task-executor/task-executor/internal/task-executor/models"
+
 
 	gomock "go.uber.org/mock/gomock"
 )

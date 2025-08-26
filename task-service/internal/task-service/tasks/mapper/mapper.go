@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"task-service/internal/task-service/models"
-	"task-service/internal/task-service/tasks/delivery/http/dto"
+	"http-task-executor/task-service/internal/task-service/models"
+	"http-task-executor/task-service/internal/task-service/tasks/delivery/http/dto"
 )
 
 func MapRequestToTask(req *dto.NewTaskRequest) models.Task {

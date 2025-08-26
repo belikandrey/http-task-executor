@@ -3,7 +3,7 @@ package tasks
 
 import (
 	"context"
-	"task-service/internal/task-service/models"
+	"http-task-executor/task-service/internal/task-service/models"
 )
 
 type UseCase interface {

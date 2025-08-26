@@ -1,8 +1,8 @@
 package logger
 
 import (
+	"http-task-executor/task-executor/internal/task-executor/config"
 	"os"
-	"task-executor/internal/task-executor/config"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"

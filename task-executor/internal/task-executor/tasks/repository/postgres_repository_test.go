@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"task-executor/internal/task-executor/models"
+	"http-task-executor/task-executor/internal/task-executor/models"
 	"testing"
 )
 

@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
+	"http-task-executor/task-service/internal/task-service/config"
+	"http-task-executor/task-service/internal/task-service/logger"
+	"http-task-executor/task-service/internal/task-service/models"
+	"http-task-executor/task-service/internal/task-service/tasks/mapper"
 	"strings"
-	"task-service/internal/task-service/config"
-	"task-service/internal/task-service/logger"
-	"task-service/internal/task-service/models"
-	"task-service/internal/task-service/tasks/mapper"
 )
 
 const flushTimeout = 5000

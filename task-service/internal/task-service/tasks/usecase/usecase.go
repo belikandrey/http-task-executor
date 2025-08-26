@@ -4,12 +4,12 @@ import (
 	"context"
 	"github.com/go-playground/validator/v10"
 	"github.com/pkg/errors"
-	"task-service/internal/task-service/logger"
-	"task-service/internal/task-service/models"
-	tasks2 "task-service/internal/task-service/tasks"
-	"task-service/pkg/errors/general/validation"
-	httpErrors "task-service/pkg/errors/http"
-	"task-service/pkg/utils"
+	"http-task-executor/task-service/internal/task-service/logger"
+	"http-task-executor/task-service/internal/task-service/models"
+	tasks2 "http-task-executor/task-service/internal/task-service/tasks"
+	"http-task-executor/task-service/pkg/errors/general/validation"
+	httpErrors "http-task-executor/task-service/pkg/errors/http"
+	"http-task-executor/task-service/pkg/utils"
 )
 
 type TaskUseCase struct {

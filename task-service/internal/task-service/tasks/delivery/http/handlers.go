@@ -3,14 +3,14 @@ package http
 import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
+	"http-task-executor/task-service/internal/task-service/config"
+	"http-task-executor/task-service/internal/task-service/logger"
+	"http-task-executor/task-service/internal/task-service/tasks"
+	"http-task-executor/task-service/internal/task-service/tasks/delivery/http/dto"
+	"http-task-executor/task-service/internal/task-service/tasks/mapper"
+	httpErrors "http-task-executor/task-service/pkg/errors/http"
 	"net/http"
 	"strconv"
-	"task-service/internal/task-service/config"
-	"task-service/internal/task-service/logger"
-	"task-service/internal/task-service/tasks"
-	"task-service/internal/task-service/tasks/delivery/http/dto"
-	"task-service/internal/task-service/tasks/mapper"
-	httpErrors "task-service/pkg/errors/http"
 )
 
 type TaskHandlers struct {

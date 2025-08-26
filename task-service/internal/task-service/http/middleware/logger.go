@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"github.com/go-chi/chi/v5/middleware"
+	"http-task-executor/task-service/internal/task-service/logger"
 	"net/http"
-	"task-service/internal/task-service/logger"
 	"time"
 )
 
