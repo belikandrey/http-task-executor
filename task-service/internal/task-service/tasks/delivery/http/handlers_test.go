@@ -37,7 +37,7 @@ func TestTaskHandlers_Create(t *testing.T) {
 
 	res := httptest.NewRecorder()
 
-	resTask := &models.Task{Url: "http://test.com", Method: "GET", Id: int64(1)}
+	resTask := &models.Task{URL: "http://test.com", Method: "GET", ID: int64(1)}
 
 	mockUseCase.EXPECT().Create(context.Background(), gomock.Any()).Return(resTask, nil)
 
@@ -51,7 +51,7 @@ func TestTaskHandlers_Create(t *testing.T) {
 
 	require.NoError(t, json.Unmarshal([]byte(body), &response))
 
-	require.Equal(t, resTask.Id, response.Id)
+	require.Equal(t, resTask.ID, response.ID)
 }
 
 func TestTaskHandlers_CreateWithHeaders(t *testing.T) {
@@ -72,7 +72,7 @@ func TestTaskHandlers_CreateWithHeaders(t *testing.T) {
 
 	res := httptest.NewRecorder()
 
-	resTask := &models.Task{Url: "http://test.com", Method: "GET", Id: int64(1)}
+	resTask := &models.Task{URL: "http://test.com", Method: "GET", ID: int64(1)}
 
 	mockUseCase.EXPECT().Create(context.Background(), gomock.Any()).Return(resTask, nil)
 
@@ -86,7 +86,7 @@ func TestTaskHandlers_CreateWithHeaders(t *testing.T) {
 
 	require.NoError(t, json.Unmarshal([]byte(body), &response))
 
-	require.Equal(t, resTask.Id, response.Id)
+	require.Equal(t, resTask.ID, response.ID)
 }
 
 func TestTaskHandlers_CreateWithErrorInUC(t *testing.T) {
@@ -192,7 +192,7 @@ func TestTaskHandlers_Get(t *testing.T) {
 	respStatus := int64(200)
 	respLength := int64(10)
 
-	resTask := &models.Task{Id: 1, Status: models.StatusInProcess, ResponseStatus: &respStatus, ResponseLength: &respLength}
+	resTask := &models.Task{ID: 1, Status: models.StatusInProcess, ResponseStatus: &respStatus, ResponseLength: &respLength}
 
 	mockUseCase.EXPECT().GetByIdWithOutputHeaders(gomock.Any(), gomock.Any()).Return(resTask, nil)
 
@@ -206,7 +206,7 @@ func TestTaskHandlers_Get(t *testing.T) {
 
 	require.NoError(t, json.Unmarshal([]byte(body), &response))
 
-	require.Equal(t, resTask.Id, response.ID)
+	require.Equal(t, resTask.ID, response.ID)
 	require.Equal(t, resTask.Status, response.Status)
 	require.Equal(t, resTask.ResponseStatus, response.ResponseStatus)
 	require.Equal(t, resTask.ResponseLength, response.ResponseLength)

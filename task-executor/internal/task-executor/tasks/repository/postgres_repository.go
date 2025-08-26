@@ -34,7 +34,7 @@ func (r *TaskRepository) UpdateResult(ctx context.Context, task *models.Task) er
 		}
 		return errors.Wrap(err, "TaskRepository.UpdateResult.PrepareContext")
 	}
-	res, err := prepare.ExecContext(ctx, task.Status, task.ResponseStatus, task.ResponseLength, task.Id)
+	res, err := prepare.ExecContext(ctx, task.Status, task.ResponseStatus, task.ResponseLength, task.ID)
 	if err != nil {
 		err1 := tx.Rollback()
 		if err1 != nil {
@@ -59,7 +59,7 @@ func (r *TaskRepository) UpdateResult(ctx context.Context, task *models.Task) er
 			outputHeaders = append(outputHeaders, header)
 		}
 	}
-	err = createHeaders(ctx, tx, task.Id, outputHeaders)
+	err = createHeaders(ctx, tx, task.ID, outputHeaders)
 	if err != nil {
 		err1 := tx.Rollback()
 		if err1 != nil {

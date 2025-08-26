@@ -51,7 +51,7 @@ func TestExecutor_Execute(t *testing.T) {
 	message := dto.KafkaTaskMessage{
 		ID:     1,
 		Method: "GET",
-		Url:    "https://www.google.com",
+		URL:    "https://www.google.com",
 	}
 
 	marshal, err := json.Marshal(message)
@@ -66,7 +66,7 @@ func TestExecutor_Execute(t *testing.T) {
 	require.NoError(t, err)
 
 	expectedTaskToUpdate := models.Task{
-		Id:             message.ID,
+		ID:             message.ID,
 		Status:         models.StatusDone,
 		ResponseStatus: &status,
 		ResponseLength: &written,
@@ -75,7 +75,7 @@ func TestExecutor_Execute(t *testing.T) {
 
 	mockTasksRepo.EXPECT().UpdateResult(gomock.Any(), gomock.Cond(func(x any) bool {
 		task := x.(*models.Task)
-		return task.Id == expectedTaskToUpdate.Id &&
+		return task.ID == expectedTaskToUpdate.ID &&
 			task.Status == expectedTaskToUpdate.Status &&
 			*task.ResponseStatus == *expectedTaskToUpdate.ResponseStatus &&
 			*task.ResponseLength == *expectedTaskToUpdate.ResponseLength &&
@@ -123,7 +123,7 @@ func TestExecutor_ExecuteTaskWithHeader(t *testing.T) {
 	message := dto.KafkaTaskMessage{
 		ID:     1,
 		Method: "GET",
-		Url:    "https://www.google.com",
+		URL:    "https://www.google.com",
 	}
 
 	marshal, err := json.Marshal(message)
@@ -140,7 +140,7 @@ func TestExecutor_ExecuteTaskWithHeader(t *testing.T) {
 	headers := make([]models.Header, 0)
 	headers = append(headers, models.Header{Name: headerName, Value: headerValue, Input: false})
 	expectedTaskToUpdate := models.Task{
-		Id:             message.ID,
+		ID:             message.ID,
 		Status:         models.StatusDone,
 		ResponseStatus: &status,
 		ResponseLength: &written,
@@ -149,7 +149,7 @@ func TestExecutor_ExecuteTaskWithHeader(t *testing.T) {
 
 	mockTasksRepo.EXPECT().UpdateResult(gomock.Any(), gomock.Cond(func(x any) bool {
 		task := x.(*models.Task)
-		return task.Id == expectedTaskToUpdate.Id &&
+		return task.ID == expectedTaskToUpdate.ID &&
 			task.Status == expectedTaskToUpdate.Status &&
 			*task.ResponseStatus == *expectedTaskToUpdate.ResponseStatus &&
 			*task.ResponseLength == *expectedTaskToUpdate.ResponseLength &&
@@ -192,7 +192,7 @@ func TestExecutor_ExecuteTaskWithNotWoringUpdateStatus(t *testing.T) {
 	message := dto.KafkaTaskMessage{
 		ID:     1,
 		Method: "GET",
-		Url:    "https://www.google.com",
+		URL:    "https://www.google.com",
 	}
 
 	marshal, err := json.Marshal(message)

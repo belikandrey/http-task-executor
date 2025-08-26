@@ -39,7 +39,7 @@ func (r *TaskRepository) Create(ctx context.Context, task *models.Task) (*models
 		return nil, errors.Wrap(err, "TaskRepository.Create.PrepareContext")
 	}
 	var id int64
-	rowContext := prepare.QueryRowContext(ctx, task.Method, task.Url, task.Status, task.ResponseStatus, task.ResponseLength)
+	rowContext := prepare.QueryRowContext(ctx, task.Method, task.URL, task.Status, task.ResponseStatus, task.ResponseLength)
 	err = rowContext.Scan(&id)
 	if err != nil {
 		err1 := tx.Rollback()
@@ -62,7 +62,7 @@ func (r *TaskRepository) Create(ctx context.Context, task *models.Task) (*models
 	if err != nil {
 		return nil, errors.Wrap(err, "TaskRepository.Create.Commit")
 	}
-	task.Id = id
+	task.ID = id
 
 	return task, nil
 }
@@ -101,9 +101,9 @@ func (r *TaskRepository) GetByIdWithOutputHeaders(ctx context.Context, id int64)
 		if task == nil {
 			task = &models.Task{}
 			task.Headers = make([]models.Header, 0)
-			err = rows.Scan(&task.Id, &task.Url, &task.Method, &task.Status, &task.ResponseStatus, &task.ResponseLength, &header.Name, &header.Value)
+			err = rows.Scan(&task.ID, &task.URL, &task.Method, &task.Status, &task.ResponseStatus, &task.ResponseLength, &header.Name, &header.Value)
 		} else {
-			err = rows.Scan(&tempTask.Id, &tempTask.Url, &tempTask.Method, &tempTask.Status, &tempTask.ResponseStatus, &tempTask.ResponseLength, &header.Name, &header.Value)
+			err = rows.Scan(&tempTask.ID, &tempTask.URL, &tempTask.Method, &tempTask.Status, &tempTask.ResponseStatus, &tempTask.ResponseLength, &header.Name, &header.Value)
 		}
 		if err != nil {
 			return nil, err

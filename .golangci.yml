@@ -17,6 +17,12 @@ linters:
   disable:
     - depguard
     - exhaustruct
-  # List of disabled linters.
-
+  settings:
+    revive:
+      enable-all-rules: true
+      rules:
+        - name: package-comments
+          disabled: true
+        - name: line-length-limit
+          disabled: true
 version: "2"

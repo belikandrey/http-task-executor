@@ -64,9 +64,11 @@ func (k *KafkaConsumer) consumeMessages() {
 	msg, err := k.consumer.ReadMessage(withoutTimeout)
 	if err != nil {
 		k.logger.Errorf("Error reading message: %v", err)
+		return
 	}
 	if msg == nil {
 		k.logger.Warn("Consumer ReadMessage message is nil")
+		return
 	}
 	k.logger.Debugf("Consumer ReadMessage: %v", string(msg.Value))
 

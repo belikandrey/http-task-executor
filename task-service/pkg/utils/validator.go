@@ -18,7 +18,7 @@ func ValidateStruct(ctx context.Context, data interface{}) error {
 	return validate.StructCtx(ctx, data)
 }
 
-func ValidateHttpMethod(method string) validation.ValidationError {
+func ValidateHttpMethod(method string) validation.TaskValidationError {
 	method = strings.ToUpper(method)
 
 	if method != http.MethodGet && method != http.MethodHead && method != http.MethodPost &&

@@ -29,23 +29,23 @@ func TestTasksRepo_CreateWithoutHeaders(t *testing.T) {
 	t.Run("Create", func(t *testing.T) {
 		task := &models.Task{
 			Method: "GET",
-			Url:    "https://www.google.com",
+			URL:    "https://www.google.com",
 			Status: models.StatusNew,
 		}
 
 		sql := "INSERT INTO task (method, url, status, response_status_code, response_length) VALUES ($1, $2, $3, $4, $5) RETURNING id"
 		mock.ExpectBegin()
 		mock.ExpectPrepare(sql)
-		mock.ExpectQuery(sql).WithArgs(task.Method, task.Url, task.Status, task.ResponseStatus, task.ResponseLength).WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+		mock.ExpectQuery(sql).WithArgs(task.Method, task.URL, task.Status, task.ResponseStatus, task.ResponseLength).WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 		mock.ExpectCommit()
 
 		created, err := tasksRepo.Create(context.Background(), task)
 
 		require.NoError(t, err)
 		require.NotEmpty(t, created)
-		assert.Equal(t, int64(1), created.Id)
+		assert.Equal(t, int64(1), created.ID)
 		assert.Equal(t, task.Method, created.Method)
-		assert.Equal(t, task.Url, created.Url)
+		assert.Equal(t, task.URL, created.URL)
 		assert.Equal(t, task.Status, created.Status)
 	})
 }
@@ -74,7 +74,7 @@ func TestTasksRepo_CreateWithHeaders(t *testing.T) {
 	t.Run("Create with one header", func(t *testing.T) {
 		task := &models.Task{
 			Method:  "GET",
-			Url:     "https://www.google.com",
+			URL:     "https://www.google.com",
 			Status:  models.StatusNew,
 			Headers: headers,
 		}
@@ -83,7 +83,7 @@ func TestTasksRepo_CreateWithHeaders(t *testing.T) {
 		headersSql := "INSERT INTO headers(name, value, input, task_id) VALUES ($1, $2, $3, 1) "
 		mock.ExpectBegin()
 		mock.ExpectPrepare(sql)
-		mock.ExpectQuery(sql).WithArgs(task.Method, task.Url, task.Status, task.ResponseStatus, task.ResponseLength).WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+		mock.ExpectQuery(sql).WithArgs(task.Method, task.URL, task.Status, task.ResponseStatus, task.ResponseLength).WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 		mock.ExpectPrepare(headersSql)
 		mock.ExpectExec(headersSql).WithArgs(header.Name, header.Value, header.Input).WillReturnResult(sqlmock.NewResult(1, 1))
 		mock.ExpectCommit()
@@ -92,16 +92,16 @@ func TestTasksRepo_CreateWithHeaders(t *testing.T) {
 
 		require.NoError(t, err)
 		require.NotEmpty(t, created)
-		assert.Equal(t, int64(1), created.Id)
+		assert.Equal(t, int64(1), created.ID)
 		assert.Equal(t, task.Method, created.Method)
-		assert.Equal(t, task.Url, created.Url)
+		assert.Equal(t, task.URL, created.URL)
 		assert.Equal(t, task.Status, created.Status)
 	})
 
 	t.Run("Create with two headers", func(t *testing.T) {
 		task := &models.Task{
 			Method:  "GET",
-			Url:     "https://www.google.com",
+			URL:     "https://www.google.com",
 			Status:  models.StatusNew,
 			Headers: twoHeaders,
 		}
@@ -110,7 +110,7 @@ func TestTasksRepo_CreateWithHeaders(t *testing.T) {
 		headersSql := "INSERT INTO headers(name, value, input, task_id) VALUES ($1, $2, $3, 1) ,($4, $5, $6, 1) "
 		mock.ExpectBegin()
 		mock.ExpectPrepare(sql)
-		mock.ExpectQuery(sql).WithArgs(task.Method, task.Url, task.Status, task.ResponseStatus, task.ResponseLength).WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+		mock.ExpectQuery(sql).WithArgs(task.Method, task.URL, task.Status, task.ResponseStatus, task.ResponseLength).WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 		mock.ExpectPrepare(headersSql)
 		mock.ExpectExec(headersSql).WithArgs(header.Name, header.Value, header.Input, secondHeader.Name, secondHeader.Value, secondHeader.Input).WillReturnResult(sqlmock.NewResult(1, 2))
 		mock.ExpectCommit()
@@ -119,16 +119,16 @@ func TestTasksRepo_CreateWithHeaders(t *testing.T) {
 
 		require.NoError(t, err)
 		require.NotEmpty(t, created)
-		assert.Equal(t, int64(1), created.Id)
+		assert.Equal(t, int64(1), created.ID)
 		assert.Equal(t, task.Method, created.Method)
-		assert.Equal(t, task.Url, created.Url)
+		assert.Equal(t, task.URL, created.URL)
 		assert.Equal(t, task.Status, created.Status)
 	})
 
 	t.Run("Expect transaction rollback if cannot create headers", func(t *testing.T) {
 		task := &models.Task{
 			Method:  "GET",
-			Url:     "https://www.google.com",
+			URL:     "https://www.google.com",
 			Status:  models.StatusNew,
 			Headers: twoHeaders,
 		}
@@ -137,7 +137,7 @@ func TestTasksRepo_CreateWithHeaders(t *testing.T) {
 		headersSql := "INSERT INTO headers(name, value, input, task_id) VALUES ($1, $2, $3, 1) ,($4, $5, $6, 1) "
 		mock.ExpectBegin()
 		mock.ExpectPrepare(sql)
-		mock.ExpectQuery(sql).WithArgs(task.Method, task.Url, task.Status, task.ResponseStatus, task.ResponseLength).WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+		mock.ExpectQuery(sql).WithArgs(task.Method, task.URL, task.Status, task.ResponseStatus, task.ResponseLength).WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 		mock.ExpectPrepare(headersSql)
 		mock.ExpectExec(headersSql).WithArgs(header.Name, header.Value, header.Input, secondHeader.Name, secondHeader.Value, secondHeader.Input).WillReturnError(errors.New("error"))
 		mock.ExpectRollback()
@@ -192,9 +192,9 @@ func TestTasksRepo_GetByIdWithOutputHeaders(t *testing.T) {
 
 		require.NoError(t, err)
 		require.NotEmpty(t, task)
-		assert.Equal(t, id, task.Id)
+		assert.Equal(t, id, task.ID)
 		assert.Equal(t, method, task.Method)
-		assert.Equal(t, url, task.Url)
+		assert.Equal(t, url, task.URL)
 		assert.Equal(t, status, task.Status)
 		assert.NotEmpty(t, task.ResponseStatus)
 		assert.NotEmpty(t, task.ResponseLength)
@@ -222,9 +222,9 @@ func TestTasksRepo_GetByIdWithOutputHeaders(t *testing.T) {
 
 		require.NoError(t, err)
 		require.NotEmpty(t, task)
-		assert.Equal(t, id, task.Id)
+		assert.Equal(t, id, task.ID)
 		assert.Equal(t, method, task.Method)
-		assert.Equal(t, url, task.Url)
+		assert.Equal(t, url, task.URL)
 		assert.Equal(t, status, task.Status)
 		assert.NotEmpty(t, task.ResponseStatus)
 		assert.NotEmpty(t, task.ResponseLength)
@@ -256,9 +256,9 @@ func TestTasksRepo_GetByIdWithOutputHeaders(t *testing.T) {
 
 		require.NoError(t, err)
 		require.NotEmpty(t, task)
-		assert.Equal(t, id, task.Id)
+		assert.Equal(t, id, task.ID)
 		assert.Equal(t, method, task.Method)
-		assert.Equal(t, url, task.Url)
+		assert.Equal(t, url, task.URL)
 		assert.Equal(t, status, task.Status)
 		assert.NotEmpty(t, task.ResponseStatus)
 		assert.NotEmpty(t, task.ResponseLength)

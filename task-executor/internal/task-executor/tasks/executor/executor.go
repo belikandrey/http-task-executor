@@ -52,8 +52,8 @@ func (e *Executor) Execute(value []byte) {
 		e.log.Errorf("executor.ExecuteTask.UpdateStatus : %v", err)
 		return
 	}
-	e.log.Infof("executor.ExecuteTask: updatedTask %v with method %s and url %s", message.ID, message.Method, message.Url)
-	req, err := http.NewRequestWithContext(ctx, strings.ToUpper(message.Method), message.Url, nil)
+	e.log.Infof("executor.ExecuteTask: updatedTask %v with method %s and url %s", message.ID, message.Method, message.URL)
+	req, err := http.NewRequestWithContext(ctx, strings.ToUpper(message.Method), message.URL, nil)
 	if err != nil {
 		e.setErrorStatus(message.ID)
 		e.log.Errorf("executor.ExecuteTask.NewRequestWithContext : %v", err)
@@ -90,7 +90,7 @@ func (e *Executor) Execute(value []byte) {
 
 	e.log.Infof("executor.ExecuteTask: updatedTask %v with method %s and url %s executed successfully with code %v", message.ID, message.Method, req.URL, resp.StatusCode)
 
-	updatedTask := models.Task{Id: message.ID}
+	updatedTask := models.Task{ID: message.ID}
 
 	updatedTask.ResponseLength = &contentLength
 	updatedTask.Status = models.StatusDone
@@ -105,7 +105,7 @@ func (e *Executor) Execute(value []byte) {
 	updatedTask.Headers = append(updatedTask.Headers, outputHeaders...)
 	err = e.repo.UpdateResult(ctx, &updatedTask)
 	if err != nil {
-		e.setErrorStatus(updatedTask.Id)
+		e.setErrorStatus(updatedTask.ID)
 		e.log.Errorf("executor.ExecuteTask.UpdateResult : %v", err)
 	}
 }

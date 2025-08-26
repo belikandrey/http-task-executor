@@ -1,24 +1,42 @@
 package models
 
 const (
-	StatusNew       = "new"
-	StatusError     = "error"
+	// StatusNew - presents new task status.
+	StatusNew = "new"
+	// StatusError - presents error task status.
+	StatusError = "error"
+	// StatusInProcess - presents in_process task status.
 	StatusInProcess = "in_process"
-	StatusDone      = "done"
+	// StatusDone - presents done task status.
+	StatusDone = "done"
 )
 
+// Task presents task to execute.
+// It contains ID, URL, Method, Status, ResponseStatus, ResponseLength, Headers.
 type Task struct {
-	Id             int64  `db:"id"`
-	Url            string `db:"url" validate:"required,url"`
-	Method         string `db:"method"               validate:"required"`
-	Status         string `db:"status"`
+	// ID - unique identifier of task.
+	ID int64 `db:"id"`
+	// URL - url to send request.
+	URL string `db:"url" validate:"required,url"`
+	// Method - http method to use in request.
+	Method string `db:"method" validate:"required"`
+	// Status - current task status.
+	Status string `db:"status"`
+	// ResponseStatus - response status from the 3-rd service.
 	ResponseStatus *int64 `db:"response_status_code"`
+	// ResponseLength - response length from the 3-rd service.
 	ResponseLength *int64 `db:"response_length"`
-	Headers        []Header
+	// Headers - response headers from the 3-rd service.
+	Headers []Header
 }
 
+// Header presents http header.
+// It contains Name, Value, Input.
 type Header struct {
-	Name  string `db:"header_name"`
+	// Name - header name.
+	Name string `db:"header_name"`
+	// Value - header value.
 	Value string `db:"header_value" validate:"required"`
-	Input bool   `db:"header_input" validate:"required"`
+	// Input - flag that points if header is from request (true) or response (false).
+	Input bool `db:"header_input" validate:"required"`
 }

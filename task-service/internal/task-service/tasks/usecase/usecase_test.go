@@ -30,7 +30,7 @@ func TestTaskUseCase_Create(t *testing.T) {
 
 	task := &models.Task{
 		Method: "GET",
-		Url:    "https://www.google.com",
+		URL:    "https://www.google.com",
 		Status: models.StatusNew,
 	}
 
@@ -70,7 +70,7 @@ func TestTaskUseCase_CreateWithErrorsNotExecuteTask(t *testing.T) {
 
 	task := &models.Task{
 		Method: "GET",
-		Url:    "https://www.google.com",
+		URL:    "https://www.google.com",
 		Status: models.StatusNew,
 	}
 
@@ -109,7 +109,7 @@ func TestTaskUseCase_CreateWithInvalidMethodNotExecuteTask(t *testing.T) {
 
 	task := &models.Task{
 		Method: "tersfasd",
-		Url:    "https://www.google.com",
+		URL:    "https://www.google.com",
 		Status: models.StatusNew,
 	}
 
@@ -150,7 +150,7 @@ func TestTaskUseCase_CreateWithInvalidUrlNotExecuteTask(t *testing.T) {
 
 	task := &models.Task{
 		Method: "GET",
-		Url:    ":/www.goog",
+		URL:    ":/www.goog",
 		Status: models.StatusNew,
 	}
 
@@ -220,9 +220,9 @@ func TestTaskUseCase_GetByIdWithOutputHeadersValidId(t *testing.T) {
 	id := int64(15)
 
 	task := &models.Task{
-		Id:     id,
+		ID:     id,
 		Method: "GET",
-		Url:    "https://www.google.com",
+		URL:    "https://www.google.com",
 		Status: models.StatusNew,
 	}
 
@@ -234,8 +234,8 @@ func TestTaskUseCase_GetByIdWithOutputHeadersValidId(t *testing.T) {
 
 	require.NoError(t, err)
 	require.NotNil(t, task)
-	assert.Equal(t, task.Id, returnedTask.Id)
+	assert.Equal(t, task.ID, returnedTask.ID)
 	assert.Equal(t, task.Status, returnedTask.Status)
 	assert.Equal(t, task.Method, returnedTask.Method)
-	assert.Equal(t, task.Url, returnedTask.Url)
+	assert.Equal(t, task.URL, returnedTask.URL)
 }

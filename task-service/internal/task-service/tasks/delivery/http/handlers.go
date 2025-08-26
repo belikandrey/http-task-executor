@@ -57,7 +57,7 @@ func (h *TaskHandlers) Create() http.HandlerFunc {
 			return
 		}
 		render.Status(r, http.StatusOK)
-		render.JSON(w, r, mapper.MapIdToTaskResponse(create.Id))
+		render.JSON(w, r, mapper.MapIDToTaskResponse(create.ID))
 	}
 }
 
@@ -85,7 +85,7 @@ func (h *TaskHandlers) Get() http.HandlerFunc {
 		h.logger.Infof("Request path decoded %v", idInt)
 
 		if idInt <= 0 {
-			h.logger.Info("Id must be positive")
+			h.logger.Info("ID must be positive")
 
 			render.Status(r, http.StatusBadRequest)
 			render.JSON(w, r, httpErrors.NewRestError(http.StatusBadRequest, "Invalid id", nil))

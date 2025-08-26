@@ -51,7 +51,7 @@ func NewBadRequestError(causes interface{}) RestErr {
 	}
 }
 
-func NewValidationError(errs []validation.ValidationError) RestErr {
+func NewValidationError(errs []validation.TaskValidationError) RestErr {
 
 	var errMsgs []string
 

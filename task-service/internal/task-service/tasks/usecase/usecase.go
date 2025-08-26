@@ -36,7 +36,7 @@ func (t *TaskUseCase) Create(ctx context.Context, task *models.Task) (*models.Ta
 
 	err = t.producer.Produce(create)
 	if err != nil {
-		errInternal := t.repo.Delete(ctx, create.Id)
+		errInternal := t.repo.Delete(ctx, create.ID)
 		if errInternal != nil {
 			return nil, httpErrors.NewInternalServerError(errInternal)
 		}
@@ -57,13 +57,13 @@ func (t *TaskUseCase) GetByIdWithOutputHeaders(ctx context.Context, id int64) (*
 	return task, nil
 }
 
-func validateTask(ctx context.Context, task *models.Task) []validation.ValidationError {
-	errs := make([]validation.ValidationError, 0)
+func validateTask(ctx context.Context, task *models.Task) []validation.TaskValidationError {
+	errs := make([]validation.TaskValidationError, 0)
 	err := utils.ValidateStruct(ctx, task)
 	if err != nil {
 		validateErr := err.(validator.ValidationErrors)
 		for _, err1 := range validateErr {
-			errs = append(errs, err1.(validation.ValidationError))
+			errs = append(errs, err1.(validation.TaskValidationError))
 		}
 	}
 	errMethod := utils.ValidateHttpMethod(task.Method)

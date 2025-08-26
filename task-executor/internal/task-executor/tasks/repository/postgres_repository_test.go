@@ -70,7 +70,7 @@ func TestTasksRepo_UpdateResultWithoutHeaders(t *testing.T) {
 		status := int64(200)
 		responseLength := int64(10)
 		task := &models.Task{
-			Id:             int64(1515),
+			ID:             int64(1515),
 			Status:         models.StatusDone,
 			ResponseStatus: &status,
 			ResponseLength: &responseLength,
@@ -78,7 +78,7 @@ func TestTasksRepo_UpdateResultWithoutHeaders(t *testing.T) {
 
 		mock.ExpectBegin()
 		mock.ExpectPrepare(sql)
-		mock.ExpectExec(sql).WithArgs(task.Status, task.ResponseStatus, task.ResponseLength, task.Id).WillReturnResult(sqlmock.NewResult(1, 1))
+		mock.ExpectExec(sql).WithArgs(task.Status, task.ResponseStatus, task.ResponseLength, task.ID).WillReturnResult(sqlmock.NewResult(1, 1))
 		mock.ExpectCommit()
 
 		err := tasksRepo.UpdateResult(context.Background(), task)
@@ -92,7 +92,7 @@ func TestTasksRepo_UpdateResultWithoutHeaders(t *testing.T) {
 		header := models.Header{Name: "TEST_NAME", Value: "TEST_VALUE", Input: false}
 		headers := []models.Header{header}
 		task := &models.Task{
-			Id:             int64(1515),
+			ID:             int64(1515),
 			Status:         models.StatusDone,
 			ResponseStatus: &status,
 			ResponseLength: &responseLength,
@@ -101,7 +101,7 @@ func TestTasksRepo_UpdateResultWithoutHeaders(t *testing.T) {
 		headersSql := "INSERT INTO headers(name, value, input, task_id) VALUES ($1, $2, $3, 1515) "
 		mock.ExpectBegin()
 		mock.ExpectPrepare(sql)
-		mock.ExpectExec(sql).WithArgs(task.Status, task.ResponseStatus, task.ResponseLength, task.Id).WillReturnResult(sqlmock.NewResult(1, 1))
+		mock.ExpectExec(sql).WithArgs(task.Status, task.ResponseStatus, task.ResponseLength, task.ID).WillReturnResult(sqlmock.NewResult(1, 1))
 		mock.ExpectPrepare(headersSql)
 		mock.ExpectExec(headersSql).WithArgs(header.Name, header.Value, header.Input).WillReturnResult(sqlmock.NewResult(1, 1))
 
@@ -119,7 +119,7 @@ func TestTasksRepo_UpdateResultWithoutHeaders(t *testing.T) {
 		secondHeader := models.Header{Name: "TEST_NAME2", Value: "TEST_VALUE2", Input: false}
 		headers := []models.Header{header, secondHeader}
 		task := &models.Task{
-			Id:             int64(1515),
+			ID:             int64(1515),
 			Status:         models.StatusDone,
 			ResponseStatus: &status,
 			ResponseLength: &responseLength,
@@ -128,7 +128,7 @@ func TestTasksRepo_UpdateResultWithoutHeaders(t *testing.T) {
 		headersSql := "INSERT INTO headers(name, value, input, task_id) VALUES ($1, $2, $3, 1515) ,($4, $5, $6, 1515) "
 		mock.ExpectBegin()
 		mock.ExpectPrepare(sql)
-		mock.ExpectExec(sql).WithArgs(task.Status, task.ResponseStatus, task.ResponseLength, task.Id).WillReturnResult(sqlmock.NewResult(1, 1))
+		mock.ExpectExec(sql).WithArgs(task.Status, task.ResponseStatus, task.ResponseLength, task.ID).WillReturnResult(sqlmock.NewResult(1, 1))
 		mock.ExpectPrepare(headersSql)
 		mock.ExpectExec(headersSql).WithArgs(header.Name, header.Value, header.Input, secondHeader.Name, secondHeader.Value, secondHeader.Input).WillReturnResult(sqlmock.NewResult(1, 1))
 
@@ -145,7 +145,7 @@ func TestTasksRepo_UpdateResultWithoutHeaders(t *testing.T) {
 		header := models.Header{Name: "TEST_NAME", Value: "TEST_VALUE", Input: false}
 		headers := []models.Header{header}
 		task := &models.Task{
-			Id:             int64(1515),
+			ID:             int64(1515),
 			Status:         models.StatusDone,
 			ResponseStatus: &status,
 			ResponseLength: &responseLength,
@@ -154,7 +154,7 @@ func TestTasksRepo_UpdateResultWithoutHeaders(t *testing.T) {
 		headersSql := "INSERT INTO headers(name, value, input, task_id) VALUES ($1, $2, $3, 1515) "
 		mock.ExpectBegin()
 		mock.ExpectPrepare(sql)
-		mock.ExpectExec(sql).WithArgs(task.Status, task.ResponseStatus, task.ResponseLength, task.Id).WillReturnResult(sqlmock.NewResult(1, 1))
+		mock.ExpectExec(sql).WithArgs(task.Status, task.ResponseStatus, task.ResponseLength, task.ID).WillReturnResult(sqlmock.NewResult(1, 1))
 		mock.ExpectPrepare(headersSql)
 		mock.ExpectExec(headersSql).WithArgs(header.Name, header.Value, header.Input).WillReturnError(errors.New("error"))
 
@@ -171,7 +171,7 @@ func TestTasksRepo_UpdateResultWithoutHeaders(t *testing.T) {
 		header := models.Header{Name: "TEST_NAME", Value: "TEST_VALUE", Input: false}
 		headers := []models.Header{header}
 		task := &models.Task{
-			Id:             int64(1515),
+			ID:             int64(1515),
 			Status:         models.StatusDone,
 			ResponseStatus: &status,
 			ResponseLength: &responseLength,
@@ -180,7 +180,7 @@ func TestTasksRepo_UpdateResultWithoutHeaders(t *testing.T) {
 		headersSql := "INSERT INTO headers(name, value, input, task_id) VALUES ($1, $2, $3, 1515) "
 		mock.ExpectBegin()
 		mock.ExpectPrepare(sql)
-		mock.ExpectExec(sql).WithArgs(task.Status, task.ResponseStatus, task.ResponseLength, task.Id).WillReturnResult(sqlmock.NewResult(1, 0))
+		mock.ExpectExec(sql).WithArgs(task.Status, task.ResponseStatus, task.ResponseLength, task.ID).WillReturnResult(sqlmock.NewResult(1, 0))
 		mock.ExpectPrepare(headersSql)
 		mock.ExpectExec(headersSql).WithArgs(header.Name, header.Value, header.Input).WillReturnError(errors.New("error"))
 

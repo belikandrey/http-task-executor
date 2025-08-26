@@ -13,10 +13,14 @@ import (
 
 const flushTimeout = 5000
 
+// TaskProducer presents message producer to Kafka.
 type TaskProducer struct {
+	// producer - kafka producer implementation
 	producer *kafka.Producer
-	topic    string
-	logger   logger.Logger
+	// topic - name of kafka topic
+	topic string
+	// logger - implementation of common logger
+	logger logger.Logger
 }
 
 func NewTaskProducer(config *config.Config, logger logger.Logger) (*TaskProducer, error) {

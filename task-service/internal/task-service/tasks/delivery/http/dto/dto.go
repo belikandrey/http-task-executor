@@ -1,26 +1,47 @@
 package dto
 
+// NewTaskRequest presents request to create new task.
+// It contains URL, Method, Headers.
 type NewTaskRequest struct {
-	Url     string            `json:"url"`
-	Method  string            `json:"method"`
+	// URL - url to send request.
+	URL string `json:"url"`
+	// Method - http method to use in request.
+	Method string `json:"method"`
+	// Headers - map of headers that will be used in request.
 	Headers map[string]string `json:"headers"`
 }
 
+// NewTaskResponse presents response to create new task request.
+// It contains task ID.
 type NewTaskResponse struct {
-	Id int64 `json:"id"`
+	// ID - unique identifier of task.
+	ID int64 `json:"id"`
 }
 
+// GetTaskResponse presents response to get task request.
+// It contains task ID, Status, ResponseStatus, ResponseLength, Headers.
 type GetTaskResponse struct {
-	ID             int64             `json:"id"`
-	Status         string            `json:"status"`
-	ResponseStatus *int64            `json:"httpStatusCode"`
-	ResponseLength *int64            `json:"length"`
-	Headers        map[string]string `json:"headers"`
+	// ID - unique identifier of task.
+	ID int64 `json:"id"`
+	// Status - current task status.
+	Status string `json:"status"`
+	// ResponseStatus - response status from the 3-rd service.
+	ResponseStatus *int64 `json:"httpStatusCode"`
+	// ResponseLength - response length from the 3-rd service.
+	ResponseLength *int64 `json:"length"`
+	// Headers - response headers from the 3-rd service.
+	Headers map[string]string `json:"headers"`
 }
 
+// KafkaTaskMessage presents message received from Kafka.
+// It contains ID, Method, URL, Headers.
 type KafkaTaskMessage struct {
-	ID      int64             `json:"id"`
-	Method  string            `json:"method"`
-	Url     string            `json:"url"`
+	// ID - unique identifier of task.
+	ID int64 `json:"id"`
+	// Method - http method to use in request.
+	Method string `json:"method"`
+	// URL - url to send request.
+	URL string `json:"url"`
+	// Headers - map of headers that will be used in request.
 	Headers map[string]string `json:"headers"`
 }
