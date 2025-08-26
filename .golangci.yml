@@ -3,15 +3,12 @@ version: "2"
 linters:
   default: all
 
-  # Disable specific linters.
   disable:
     - depguard
     - exhaustruct
 
   settings:
     revive:
-      # Enable all available rules.
-      # Default: false
       enable-all-rules: true
 
       rules:
@@ -22,18 +19,9 @@ linters:
           severity: warning
           disabled: true
 
-  exclusions:
-    paths:
-      - ".*\\.mock\\.go$"
-      - "^mock/.*"
-
 formatters:
   enable:
     - gofmt
-  exclusions:
-    paths:
-      - ".*\\.mock\\.go$"
-      - "^mock/.*"
 run:
   timeout: 5m
   tests: false
