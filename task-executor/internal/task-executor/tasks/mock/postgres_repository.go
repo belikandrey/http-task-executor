@@ -13,7 +13,6 @@ import (
 	context "context"
 	"http-task-executor/task-executor/internal/task-executor/models"
 
-
 	gomock "go.uber.org/mock/gomock"
 )
 

@@ -1,0 +1,22 @@
+run:
+  # Timeout for analysis
+  timeout: 3m
+  # Exit code when at least one issue was found.
+  issues-exit-code: 1
+  # Include test files or not.
+  tests: false
+  # Allow multiple parallel golangci-lint instances running.
+  # If false (default) - golangci-lint acquires file lock on start.
+  allow-parallel-runners: true
+
+  go: '1.24.5'
+
+linters:
+  # List of enabled linters.
+  default: all
+  disable:
+    - depguard
+    - exhaustruct
+  # List of disabled linters.
+
+version: "2"
