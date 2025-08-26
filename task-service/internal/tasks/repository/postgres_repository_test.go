@@ -323,3 +323,41 @@ func TestTasksRepo_UpdateStatus(t *testing.T) {
 		require.ErrorIs(t, err, dbSql.ErrNoRows)
 	})
 }
+
+func TestTasksRepo_Delete(t *testing.T) {
+	t.Parallel()
+
+	db, mock, err := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
+	require.NoError(t, err)
+
+	sqlxDb := sqlx.NewDb(db, "sqlmock")
+
+	sugar := zap.New(zapcore.NewNopCore()).Sugar()
+
+	sql := "DELETE FROM task WHERE id=$1"
+
+	tasksRepo := NewRepository(sqlxDb, sugar)
+
+	t.Run("Delete successfully", func(t *testing.T) {
+		id := int64(1515)
+
+		mock.ExpectPrepare(sql)
+		mock.ExpectExec(sql).WithArgs(id).WillReturnResult(sqlmock.NewResult(1, 1))
+
+		err := tasksRepo.Delete(context.Background(), id)
+
+		require.NoError(t, err)
+	})
+
+	t.Run("Delete not rows affected", func(t *testing.T) {
+		id := int64(1515)
+
+		mock.ExpectPrepare(sql)
+		mock.ExpectExec(sql).WithArgs(id).WillReturnResult(sqlmock.NewResult(1, 0))
+
+		err := tasksRepo.Delete(context.Background(), id)
+
+		require.Error(t, err)
+		require.ErrorIs(t, err, dbSql.ErrNoRows)
+	})
+}

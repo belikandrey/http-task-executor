@@ -36,9 +36,9 @@ func (t *TaskUseCase) Create(ctx context.Context, task *models.Task) (*models.Ta
 
 	err = t.producer.Produce(create)
 	if err != nil {
-		errInternal := t.repo.UpdateStatus(ctx, create.Id, models.StatusError)
+		errInternal := t.repo.Delete(ctx, create.Id)
 		if errInternal != nil {
-			return nil, errInternal
+			return nil, httpErrors.NewInternalServerError(errInternal)
 		}
 		return nil, err
 	}

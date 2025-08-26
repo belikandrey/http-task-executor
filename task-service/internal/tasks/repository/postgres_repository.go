@@ -140,6 +140,27 @@ func (r *TaskRepository) UpdateStatus(ctx context.Context, id int64, newStatus s
 	return nil
 }
 
+func (r *TaskRepository) Delete(ctx context.Context, id int64) error {
+	prepareContext, err := r.db.PrepareContext(ctx, "DELETE FROM task WHERE id=$1")
+	if err != nil {
+		return errors.Wrap(err, "TaskRepository.Delete.PrepareContext")
+	}
+
+	result, err := prepareContext.ExecContext(ctx, id)
+	if err != nil {
+		return errors.Wrap(err, "TaskRepository.Delete.ExecContext")
+	}
+
+	affected, err := result.RowsAffected()
+	if err != nil {
+		return errors.Wrap(err, "TaskRepository.Delete.RowsAffected")
+	}
+	if affected == 0 {
+		return sql.ErrNoRows
+	}
+	return nil
+}
+
 func createHeaders(ctx context.Context, tx *sql.Tx, taskId int64, headers []models.Header) error {
 	if len(headers) == 0 {
 		return nil
