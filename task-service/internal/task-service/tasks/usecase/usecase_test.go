@@ -195,7 +195,7 @@ func TestTaskUseCase_GetByIdWithOutputHeadersInvalidId(t *testing.T) {
 
 	mockTasksRepo.EXPECT().GetByIdWithOutputHeaders(ctx, id).Times(0)
 
-	task, err := useCase.GetByIdWithOutputHeaders(ctx, id)
+	task, err := useCase.GetByIDWithOutputHeaders(ctx, id)
 
 	require.Error(t, err)
 	require.Nil(t, task)
@@ -230,7 +230,7 @@ func TestTaskUseCase_GetByIdWithOutputHeadersValidId(t *testing.T) {
 
 	mockTasksRepo.EXPECT().GetByIdWithOutputHeaders(ctx, id).Return(task, nil).Times(1)
 
-	returnedTask, err := useCase.GetByIdWithOutputHeaders(ctx, id)
+	returnedTask, err := useCase.GetByIDWithOutputHeaders(ctx, id)
 
 	require.NoError(t, err)
 	require.NotNil(t, task)

@@ -70,10 +70,10 @@ func (mr *MockRepositoryMockRecorder) Delete(ctx, id any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockRepository)(nil).Delete), ctx, id)
 }
 
-// GetByIdWithOutputHeaders mocks base method.
-func (m *MockRepository) GetByIdWithOutputHeaders(ctx context.Context, id int64) (*models.Task, error) {
+// GetByIDWithOutputHeaders mocks base method.
+func (m *MockRepository) GetByIDWithOutputHeaders(ctx context.Context, id int64) (*models.Task, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetByIdWithOutputHeaders", ctx, id)
+	ret := m.ctrl.Call(m, "GetByIDWithOutputHeaders", ctx, id)
 	ret0, _ := ret[0].(*models.Task)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
@@ -82,7 +82,7 @@ func (m *MockRepository) GetByIdWithOutputHeaders(ctx context.Context, id int64)
 // GetByIdWithOutputHeaders indicates an expected call of GetByIdWithOutputHeaders.
 func (mr *MockRepositoryMockRecorder) GetByIdWithOutputHeaders(ctx, id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByIdWithOutputHeaders", reflect.TypeOf((*MockRepository)(nil).GetByIdWithOutputHeaders), ctx, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByIDWithOutputHeaders", reflect.TypeOf((*MockRepository)(nil).GetByIDWithOutputHeaders), ctx, id)
 }
 
 // UpdateStatus mocks base method.

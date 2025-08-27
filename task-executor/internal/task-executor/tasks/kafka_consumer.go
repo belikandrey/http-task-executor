@@ -1,6 +1,6 @@
 package tasks
 
-// Consumer represents kafka consumer
+// Consumer represents kafka consumer.
 type Consumer interface {
 	Start()
 }

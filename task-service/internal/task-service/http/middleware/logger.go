@@ -1,10 +1,11 @@
 package middleware
 
 import (
-	"github.com/go-chi/chi/v5/middleware"
-	"http-task-executor/task-service/internal/task-service/logger"
 	"net/http"
 	"time"
+
+	"github.com/go-chi/chi/v5/middleware"
+	"http-task-executor/task-service/internal/task-service/logger"
 )
 
 // New creates new logger middleware that adds logging in http requests.
@@ -18,7 +19,8 @@ func New(log logger.Logger) func(next http.Handler) http.Handler {
 			start := time.Now()
 
 			defer func() {
-				log.Infof("%s request to %s completed with status code %d, bytes = %d, duration = %s. Remote Addr : %s, User Agent : %s, Request id %s",
+				log.Infof(
+					"%s request to %s completed with status code %d, bytes = %d, duration = %s. Remote Addr : %s, User Agent : %s, Request id %s",
 					r.Method,
 					r.URL.Path,
 					ww.Status(),
@@ -26,11 +28,13 @@ func New(log logger.Logger) func(next http.Handler) http.Handler {
 					time.Since(start).String(),
 					r.RemoteAddr,
 					r.UserAgent(),
-					middleware.GetReqID(r.Context()))
+					middleware.GetReqID(r.Context()),
+				)
 			}()
 
 			next.ServeHTTP(ww, r)
 		}
+
 		return http.HandlerFunc(fn)
 	}
 }

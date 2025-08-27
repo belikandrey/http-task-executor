@@ -188,7 +188,7 @@ func TestTasksRepo_GetByIdWithOutputHeaders(t *testing.T) {
 		mock.ExpectPrepare(sql)
 		mock.ExpectQuery(sql).WithArgs(id).WillReturnRows(rows)
 
-		task, err := tasksRepo.GetByIdWithOutputHeaders(context.Background(), id)
+		task, err := tasksRepo.GetByIDWithOutputHeaders(context.Background(), id)
 
 		require.NoError(t, err)
 		require.NotEmpty(t, task)
@@ -218,7 +218,7 @@ func TestTasksRepo_GetByIdWithOutputHeaders(t *testing.T) {
 		mock.ExpectPrepare(sql)
 		mock.ExpectQuery(sql).WithArgs(id).WillReturnRows(rows)
 
-		task, err := tasksRepo.GetByIdWithOutputHeaders(context.Background(), id)
+		task, err := tasksRepo.GetByIDWithOutputHeaders(context.Background(), id)
 
 		require.NoError(t, err)
 		require.NotEmpty(t, task)
@@ -252,7 +252,7 @@ func TestTasksRepo_GetByIdWithOutputHeaders(t *testing.T) {
 		mock.ExpectPrepare(sql)
 		mock.ExpectQuery(sql).WithArgs(id).WillReturnRows(rows)
 
-		task, err := tasksRepo.GetByIdWithOutputHeaders(context.Background(), id)
+		task, err := tasksRepo.GetByIDWithOutputHeaders(context.Background(), id)
 
 		require.NoError(t, err)
 		require.NotEmpty(t, task)
@@ -276,7 +276,7 @@ func TestTasksRepo_GetByIdWithOutputHeaders(t *testing.T) {
 		mock.ExpectPrepare(sql)
 		mock.ExpectQuery(sql).WithArgs(id).WillReturnRows(rows)
 
-		task, err := tasksRepo.GetByIdWithOutputHeaders(context.Background(), id)
+		task, err := tasksRepo.GetByIDWithOutputHeaders(context.Background(), id)
 
 		require.Error(t, err)
 		require.Nil(t, task)

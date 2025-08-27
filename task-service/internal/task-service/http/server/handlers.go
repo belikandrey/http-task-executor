@@ -1,6 +1,8 @@
 package server
 
 import (
+	"time"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	httpSwagger "github.com/swaggo/http-swagger"
@@ -8,7 +10,6 @@ import (
 	"http-task-executor/task-service/internal/task-service/tasks/delivery/http"
 	"http-task-executor/task-service/internal/task-service/tasks/repository"
 	"http-task-executor/task-service/internal/task-service/tasks/usecase"
-	"time"
 )
 
 // AddHandlers added handlers to router.

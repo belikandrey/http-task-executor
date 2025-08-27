@@ -6,20 +6,21 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"http-task-executor/task-service/pkg/errors/general/validation"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"http-task-executor/task-service/pkg/errors/general/validation"
 )
 
 var (
-	// ErrBadRequest - bad request error
+	// ErrBadRequest - bad request error.
 	ErrBadRequest = errors.New("bad request")
-	// ErrNotFound - not found error
+	// ErrNotFound - not found error.
 	ErrNotFound = errors.New("not Found")
-	// ErrRequestTimeoutError - request timeout error
+	// ErrRequestTimeoutError - request timeout error.
 	ErrRequestTimeoutError = errors.New("request Timeout")
-	// ErrInternalServerError - internal service error
+	// ErrInternalServerError - internal service error.
 	ErrInternalServerError = errors.New("internal Server Error")
 )
 
@@ -27,33 +28,33 @@ var (
 type RestErr interface {
 	Status() int
 	Error() string
-	Causes() interface{}
+	Causes() any
 }
 
 // RestError represents REST error and implements RestErr.
 type RestError struct {
-	ErrStatus int         `json:"status,omitempty"`
-	ErrError  string      `json:"error,omitempty"`
-	ErrCauses interface{} `json:"-"`
+	ErrStatus int    `json:"status,omitempty"`
+	ErrError  string `json:"error,omitempty"`
+	ErrCauses any    `json:"-"`
 }
 
-// Error returns formatted error message
+// Error returns formatted error message.
 func (e RestError) Error() string {
 	return fmt.Sprintf("status: %d - errors: %s - causes: %v", e.ErrStatus, e.ErrError, e.ErrCauses)
 }
 
-// Status returns http status code
+// Status returns http status code.
 func (e RestError) Status() int {
 	return e.ErrStatus
 }
 
-// Causes returns causes
-func (e RestError) Causes() interface{} {
+// Causes returns causes.
+func (e RestError) Causes() any {
 	return e.ErrCauses
 }
 
-// NewBadRequestError creates new bad request error
-func NewBadRequestError(causes interface{}) RestErr {
+// NewBadRequestError creates new bad request error.
+func NewBadRequestError(causes any) RestErr {
 	return RestError{
 		ErrStatus: http.StatusBadRequest,
 		ErrError:  ErrBadRequest.Error(),
@@ -61,9 +62,8 @@ func NewBadRequestError(causes interface{}) RestErr {
 	}
 }
 
-// NewValidationError creates new validation error
+// NewValidationError creates new validation error.
 func NewValidationError(errs []validation.TaskValidationError) RestErr {
-
 	var errMsgs []string
 
 	for _, err := range errs {
@@ -83,13 +83,13 @@ func NewValidationError(errs []validation.TaskValidationError) RestErr {
 	}
 }
 
-// ErrorResponse returns status code and response object
-func ErrorResponse(err error) (int, interface{}) {
+// ErrorResponse returns status code and response object.
+func ErrorResponse(err error) (int, any) {
 	return ParseErrors(err).Status(), ParseErrors(err)
 }
 
-// NewRestError creates error
-func NewRestError(status int, err string, causes interface{}) RestErr {
+// NewRestError creates error.
+func NewRestError(status int, err string, causes any) RestErr {
 	return RestError{
 		ErrStatus: status,
 		ErrError:  err,
@@ -97,21 +97,25 @@ func NewRestError(status int, err string, causes interface{}) RestErr {
 	}
 }
 
-// NewInternalServerError creates internal server error
-func NewInternalServerError(causes interface{}) RestErr {
+// NewInternalServerError creates internal server error.
+func NewInternalServerError(causes any) RestErr {
 	result := RestError{
 		ErrStatus: http.StatusInternalServerError,
 		ErrError:  ErrInternalServerError.Error(),
 		ErrCauses: causes,
 	}
+
 	return result
 }
 
 // ParseErrors parses error and returns RestErr based on error type.
 func ParseErrors(err error) RestErr {
-	var unmarshalTypeError *json.UnmarshalTypeError
-	var jsonSyntaxType *json.SyntaxError
-	var strconvNumError *strconv.NumError
+	var (
+		unmarshalTypeError *json.UnmarshalTypeError
+		jsonSyntaxType     *json.SyntaxError
+		strconvNumError    *strconv.NumError
+	)
+
 	switch {
 	case errors.Is(err, sql.ErrNoRows):
 		return NewRestError(http.StatusNotFound, ErrNotFound.Error(), err)
@@ -127,6 +131,7 @@ func ParseErrors(err error) RestErr {
 		if restErr, ok := err.(RestErr); ok {
 			return restErr
 		}
+
 		return NewInternalServerError(err)
 	}
 }

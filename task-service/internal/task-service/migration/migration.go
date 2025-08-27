@@ -8,10 +8,10 @@ import (
 
 // MigratePostgresql runs migrations in database.
 func MigratePostgresql(db *sqlx.DB) error {
-
 	goose.SetBaseFS(root.MigrationFS)
 
-	if err := goose.SetDialect("postgres"); err != nil {
+	err := goose.SetDialect("postgres")
+	if err != nil {
 		return err
 	}
 

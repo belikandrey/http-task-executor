@@ -2,81 +2,82 @@ package config
 
 import (
 	"flag"
-	"github.com/ilyakaznacheev/cleanenv"
 	"os"
 	"time"
+
+	"github.com/ilyakaznacheev/cleanenv"
 )
 
 // Config represents full configuration for app.
 type Config struct {
 	// Env - environment name (local/prod).
-	Env string `yaml:"env" env-required:"true"`
-	// ServerConfig - http server configuration presented in HttpServerConfig.
-	ServerConfig HttpServerConfig `yaml:"http_server"`
+	Env string `env-required:"true" yaml:"env"`
+	// ServerConfig - http server configuration presented in HTTPServerConfig.
+	ServerConfig HTTPServerConfig `                    yaml:"http_server"`
 	// Postgres - postgres configuration presented in PostgresConfig.
-	Postgres PostgresConfig `yaml:"postgres"`
+	Postgres PostgresConfig `                    yaml:"postgres"`
 	// LoggerConfig - logger configuration presented in LoggerConfig.
-	LoggerConfig LoggerConfig `yaml:"logger"`
+	LoggerConfig LoggerConfig `                    yaml:"logger"`
 	// ExternalServiceTimeout - external service timeout time.Duration.
-	ExternalServiceTimeout time.Duration `yaml:"external_service_timeout"`
+	ExternalServiceTimeout time.Duration `                    yaml:"external_service_timeout"`
 	// KafkaCfg - kafka configuration presented in KafkaConfig.
-	KafkaCfg KafkaConfig `yaml:"kafka"`
+	KafkaCfg KafkaConfig `                    yaml:"kafka"`
 }
 
-// HttpServerConfig represents http server configuration.
-type HttpServerConfig struct {
+// HTTPServerConfig represents http server configuration.
+type HTTPServerConfig struct {
 	// Host - http-server host.
-	Host string `yaml:"host" env-required:"true"`
+	Host string `env-required:"true" yaml:"host"`
 	// Port - http-server port.
-	Port int64 `yaml:"port" env-required:"true"`
+	Port int64 `env-required:"true" yaml:"port"`
 	// ReadTimeout - http-server read timeout.
-	ReadTimeout time.Duration `yaml:"read_timeout" env-default:"5s"`
+	ReadTimeout time.Duration `                    yaml:"read_timeout"  env-default:"5s"`
 	// WriteTimeout - http-server write timeout.
-	WriteTimeout time.Duration `yaml:"write_timeout" env-default:"5s"`
+	WriteTimeout time.Duration `                    yaml:"write_timeout" env-default:"5s"`
 }
 
 // PostgresConfig - represents postgres configuration.
 type PostgresConfig struct {
 	// Host - represents postgres server host.
-	Host string `yaml:"host" env-required:"true"`
+	Host string `env-required:"true" yaml:"host"`
 	// Port - represents postgres server port.
-	Port int64 `yaml:"port" env-required:"true"`
+	Port int64 `env-required:"true" yaml:"port"`
 	// Name - represents postgres database name.
-	Name string `yaml:"name" env-required:"true"`
+	Name string `env-required:"true" yaml:"name"`
 	// User - represents postgres user.
-	User string `yaml:"user" env-required:"true"`
+	User string `env-required:"true" yaml:"user"`
 	// Password - represents postgres password.
-	Password string `yaml:"password" env-required:"true"`
+	Password string `env-required:"true" yaml:"password"`
 	// SslMode - represents postgres sslmode.
-	SslMode string `yaml:"sslmode" env-required:"true"`
+	SslMode string `env-required:"true" yaml:"sslmode"`
 	// Driver - represents postgres driver.
-	Driver string `yaml:"driver" env-required:"true"`
+	Driver string `env-required:"true" yaml:"driver"`
 	// MaxOpenConnections - number of max db connections.
-	MaxOpenConnections int64 `yaml:"max_open_connections" env-required:"true"`
+	MaxOpenConnections int64 `env-required:"true" yaml:"max_open_connections"`
 	// ConnectionMaxLifetime - max lifetime of connection.
-	ConnectionMaxLifetime time.Duration `yaml:"connection_max_lifetime" env-required:"true"`
+	ConnectionMaxLifetime time.Duration `env-required:"true" yaml:"connection_max_lifetime"`
 	// MaxIdleConnections - number of max db idle connections.
-	MaxIdleConnections int64 `yaml:"max_idle_connections" env-required:"true"`
+	MaxIdleConnections int64 `env-required:"true" yaml:"max_idle_connections"`
 	// ConnectionMaxIdleTime - max lifetime of idle connection.
-	ConnectionMaxIdleTime time.Duration `yaml:"connection_max_idle_time" env-required:"true"`
+	ConnectionMaxIdleTime time.Duration `env-required:"true" yaml:"connection_max_idle_time"`
 }
 
 // LoggerConfig - represents logger configuration.
 type LoggerConfig struct {
 	// Filename - output logger filename.
-	Filename string `yaml:"filename" env-required:"true"`
+	Filename string `env-required:"true" yaml:"filename"`
 	// Level - logger level.
-	Level string `yaml:"level" env-required:"true"`
+	Level string `env-required:"true" yaml:"level"`
 	// Format - logger format (json/text).
-	Format string `yaml:"format" env-required:"true"`
+	Format string `env-required:"true" yaml:"format"`
 }
 
 // KafkaConfig - represents kafka configuration.
 type KafkaConfig struct {
 	// Addresses - brokers addresses.
-	Addresses []string `yaml:"addresses" env-required:"true"`
+	Addresses []string `env-required:"true" yaml:"addresses"`
 	// Topic - kafka topic.
-	Topic string `yaml:"topic" env-required:"true"`
+	Topic string `env-required:"true" yaml:"topic"`
 }
 
 // MustLoad - loads full app configuration and returns *Config.
@@ -93,6 +94,7 @@ func MustLoad() *Config {
 	}
 
 	var config Config
+
 	err := cleanenv.ReadConfig(path, &config)
 	if err != nil {
 		panic("can't read config file " + path + " : " + err.Error())
@@ -103,6 +105,7 @@ func MustLoad() *Config {
 
 func getConfigPath() string {
 	var path string
+
 	flag.StringVar(&path, "config", "", "config file path")
 	flag.Parse()
 

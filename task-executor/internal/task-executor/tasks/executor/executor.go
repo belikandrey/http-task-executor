@@ -3,14 +3,15 @@ package executor
 import (
 	"context"
 	"encoding/json"
-	"http-task-executor/task-executor/internal/task-executor/dto"
-	"http-task-executor/task-executor/internal/task-executor/logger"
-	"http-task-executor/task-executor/internal/task-executor/models"
-	tasks2 "http-task-executor/task-executor/internal/task-executor/tasks"
 	"io"
 	"net/http"
 	"strings"
 	"time"
+
+	"http-task-executor/task-executor/internal/task-executor/dto"
+	"http-task-executor/task-executor/internal/task-executor/logger"
+	"http-task-executor/task-executor/internal/task-executor/models"
+	tasks2 "http-task-executor/task-executor/internal/task-executor/tasks"
 )
 
 // Executor represents tasks executor.
@@ -36,19 +37,25 @@ func (c *ClientProvider) Client() *http.Client {
 }
 
 // NewExecutor - creates new instance of Executor.
-func NewExecutor(log logger.Logger, repo tasks2.Repository, clientProvider tasks2.ClientProvider, timeout time.Duration) *Executor {
+func NewExecutor(
+	log logger.Logger,
+	repo tasks2.Repository,
+	clientProvider tasks2.ClientProvider,
+	timeout time.Duration,
+) *Executor {
 	return &Executor{log: log, repo: repo, clientProvider: clientProvider, timeout: timeout}
 }
 
 // Execute - executes task to 3-rd service.
 func (e *Executor) Execute(value []byte) {
 	e.log.Debugf("Executing message: %v", string(value))
+
 	var message dto.KafkaTaskMessage
 
 	err := json.Unmarshal(value, &message)
-
 	if err != nil {
 		e.log.Errorf("executor.ExecuteTask Error unmarshal message : %v", err)
+
 		return
 	}
 
@@ -59,15 +66,25 @@ func (e *Executor) Execute(value []byte) {
 	err = e.repo.UpdateStatus(ctx, message.ID, models.StatusInProcess)
 	if err != nil {
 		e.log.Errorf("executor.ExecuteTask.UpdateStatus : %v", err)
+
 		return
 	}
-	e.log.Infof("executor.ExecuteTask: updatedTask %v with method %s and url %s", message.ID, message.Method, message.URL)
+
+	e.log.Infof(
+		"executor.ExecuteTask: updatedTask %v with method %s and url %s",
+		message.ID,
+		message.Method,
+		message.URL,
+	)
+
 	req, err := http.NewRequestWithContext(ctx, strings.ToUpper(message.Method), message.URL, nil)
 	if err != nil {
 		e.setErrorStatus(message.ID)
 		e.log.Errorf("executor.ExecuteTask.NewRequestWithContext : %v", err)
+
 		return
 	}
+
 	if message.Headers != nil {
 		for key, val := range message.Headers {
 			req.Header.Add(key, val)
@@ -80,6 +97,7 @@ func (e *Executor) Execute(value []byte) {
 	if err != nil {
 		e.setErrorStatus(message.ID)
 		e.log.Errorf("executor.ExecuteTask.DoRequest : %v", err)
+
 		return
 	}
 
@@ -94,10 +112,17 @@ func (e *Executor) Execute(value []byte) {
 	if err != nil {
 		e.setErrorStatus(message.ID)
 		e.log.Errorf("executor.ExecuteTask.DoRequest.Copy : %v", err)
+
 		return
 	}
 
-	e.log.Infof("executor.ExecuteTask: updatedTask %v with method %s and url %s executed successfully with code %v", message.ID, message.Method, req.URL, resp.StatusCode)
+	e.log.Infof(
+		"executor.ExecuteTask: updatedTask %v with method %s and url %s executed successfully with code %v",
+		message.ID,
+		message.Method,
+		req.URL,
+		resp.StatusCode,
+	)
 
 	updatedTask := models.Task{ID: message.ID}
 
@@ -105,13 +130,16 @@ func (e *Executor) Execute(value []byte) {
 	updatedTask.Status = models.StatusDone
 	code := int64(resp.StatusCode)
 	updatedTask.ResponseStatus = &code
+
 	outputHeaders := make([]models.Header, 0)
+
 	for k, v := range resp.Header {
-		res := strings.Join(v[:], ",")
+		res := strings.Join(v, ",")
 		outputHeaders = append(outputHeaders, models.Header{Name: k, Value: res, Input: false})
 	}
 
 	updatedTask.Headers = append(updatedTask.Headers, outputHeaders...)
+
 	err = e.repo.UpdateResult(ctx, &updatedTask)
 	if err != nil {
 		e.setErrorStatus(updatedTask.ID)

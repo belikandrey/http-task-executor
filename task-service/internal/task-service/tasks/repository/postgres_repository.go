@@ -4,11 +4,12 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strings"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 	"http-task-executor/task-service/internal/task-service/logger"
 	"http-task-executor/task-service/internal/task-service/models"
-	"strings"
 )
 
 // TaskRepository represents db repository to work with models.Task.
@@ -33,22 +34,41 @@ func (r *TaskRepository) Create(ctx context.Context, task *models.Task) (*models
 		task.Headers = make([]models.Header, 0)
 	}
 
-	prepare, err := tx.PrepareContext(ctx, "INSERT INTO task (method, url, status, response_status_code, response_length) VALUES ($1, $2, $3, $4, $5) RETURNING id")
+	prepare, err := tx.PrepareContext(
+		ctx,
+		"INSERT INTO task (method, url, status, response_status_code, response_length) VALUES ($1, $2, $3, $4, $5) RETURNING id",
+	)
 	if err != nil {
 		err1 := tx.Rollback()
 		if err1 != nil {
 			return nil, errors.Wrap(err1, "TaskRepository.Create.PrepareContext.Rollback")
 		}
+
 		return nil, errors.Wrap(err, "TaskRepository.Create.PrepareContext")
 	}
+
+	defer func() {
+		_ = prepare.Close()
+	}()
+
 	var id int64
-	rowContext := prepare.QueryRowContext(ctx, task.Method, task.URL, task.Status, task.ResponseStatus, task.ResponseLength)
+
+	rowContext := prepare.QueryRowContext(
+		ctx,
+		task.Method,
+		task.URL,
+		task.Status,
+		task.ResponseStatus,
+		task.ResponseLength,
+	)
+
 	err = rowContext.Scan(&id)
 	if err != nil {
 		err1 := tx.Rollback()
 		if err1 != nil {
 			return nil, errors.Wrap(err1, "TaskRepository.Create.QueryRowContext.Rollback")
 		}
+
 		return nil, errors.Wrap(err, "TaskRepository.Create.QueryRowContext")
 	}
 
@@ -58,6 +78,7 @@ func (r *TaskRepository) Create(ctx context.Context, task *models.Task) (*models
 		if err1 != nil {
 			return nil, errors.Wrap(err1, "TaskRepository.Create.createHeaders.Rollback")
 		}
+
 		return nil, errors.Wrap(err, "TaskRepository.Create.createHeaders")
 	}
 
@@ -65,13 +86,17 @@ func (r *TaskRepository) Create(ctx context.Context, task *models.Task) (*models
 	if err != nil {
 		return nil, errors.Wrap(err, "TaskRepository.Create.Commit")
 	}
+
 	task.ID = id
 
 	return task, nil
 }
 
-// GetByIdWithOutputHeaders returns models.Task by requested ID.
-func (r *TaskRepository) GetByIdWithOutputHeaders(ctx context.Context, id int64) (*models.Task, error) {
+// GetByIDWithOutputHeaders returns models.Task by requested ID.
+func (r *TaskRepository) GetByIDWithOutputHeaders(
+	ctx context.Context,
+	id int64,
+) (*models.Task, error) {
 	prepareContext, err := r.db.PrepareContext(ctx, `SELECT t.id,
        								t.url as url,
        								t.method as method,
@@ -86,9 +111,25 @@ func (r *TaskRepository) GetByIdWithOutputHeaders(ctx context.Context, id int64)
 	if err != nil {
 		return nil, errors.Wrap(err, "TaskRepository.GetByIdWithResponseHeaders.PrepareContext")
 	}
+
+	defer func() {
+		_ = prepareContext.Close()
+	}()
+
 	rows, err := prepareContext.QueryContext(ctx, id)
 	if err != nil {
 		return nil, errors.Wrap(err, "TaskRepository.GetByIdWithResponseHeaders.QueryContext")
+	}
+
+	defer func() {
+		_ = rows.Close()
+	}()
+
+	if rows.Err() != nil {
+		return nil, errors.Wrap(
+			rows.Err(),
+			"TaskRepository.GetByIdWithResponseHeaders.QueryContext",
+		)
 	}
 
 	defer func(rows *sql.Rows) {
@@ -99,23 +140,38 @@ func (r *TaskRepository) GetByIdWithOutputHeaders(ctx context.Context, id int64)
 	}(rows)
 
 	var task *models.Task
+
 	tempTask := &models.Task{}
+
 	for rows.Next() {
 		header := models.Header{Input: false}
+
 		if task == nil {
 			task = &models.Task{}
 			task.Headers = make([]models.Header, 0)
-			err = rows.Scan(&task.ID, &task.URL, &task.Method, &task.Status, &task.ResponseStatus, &task.ResponseLength, &header.Name, &header.Value)
+			err = rows.Scan(
+				&task.ID,
+				&task.URL,
+				&task.Method,
+				&task.Status,
+				&task.ResponseStatus,
+				&task.ResponseLength,
+				&header.Name,
+				&header.Value,
+			)
 		} else {
 			err = rows.Scan(&tempTask.ID, &tempTask.URL, &tempTask.Method, &tempTask.Status, &tempTask.ResponseStatus, &tempTask.ResponseLength, &header.Name, &header.Value)
 		}
+
 		if err != nil {
 			return nil, err
 		}
+
 		if header.Name != "" && header.Value != "" {
 			task.Headers = append(task.Headers, header)
 		}
 	}
+
 	if task == nil {
 		return nil, sql.ErrNoRows
 	}
@@ -130,6 +186,10 @@ func (r *TaskRepository) UpdateStatus(ctx context.Context, id int64, newStatus s
 		return errors.Wrap(err, "TaskRepository.UpdateStatus.PrepareContext")
 	}
 
+	defer func() {
+		_ = prepareContext.Close()
+	}()
+
 	result, err := prepareContext.ExecContext(ctx, newStatus, id)
 	if err != nil {
 		return errors.Wrap(err, "TaskRepository.UpdateStatus.ExecContext")
@@ -139,9 +199,11 @@ func (r *TaskRepository) UpdateStatus(ctx context.Context, id int64, newStatus s
 	if err != nil {
 		return errors.Wrap(err, "TaskRepository.UpdateStatus.RowsAffected")
 	}
+
 	if affected == 0 {
 		return sql.ErrNoRows
 	}
+
 	return nil
 }
 
@@ -152,6 +214,10 @@ func (r *TaskRepository) Delete(ctx context.Context, id int64) error {
 		return errors.Wrap(err, "TaskRepository.Delete.PrepareContext")
 	}
 
+	defer func() {
+		_ = prepareContext.Close()
+	}()
+
 	result, err := prepareContext.ExecContext(ctx, id)
 	if err != nil {
 		return errors.Wrap(err, "TaskRepository.Delete.ExecContext")
@@ -161,38 +227,62 @@ func (r *TaskRepository) Delete(ctx context.Context, id int64) error {
 	if err != nil {
 		return errors.Wrap(err, "TaskRepository.Delete.RowsAffected")
 	}
+
 	if affected == 0 {
 		return sql.ErrNoRows
 	}
+
 	return nil
 }
 
-func createHeaders(ctx context.Context, tx *sql.Tx, taskId int64, headers []models.Header) error {
+func createHeaders(ctx context.Context, tx *sql.Tx, taskID int64, headers []models.Header) error {
 	if len(headers) == 0 {
 		return nil
 	}
+
 	sb := new(strings.Builder)
-	sb.WriteString("INSERT INTO headers(name, value, input, task_id) VALUES ")
-	params := make([]interface{}, 0, len(headers)*2)
+	_, _ = sb.WriteString("INSERT INTO headers(name, value, input, task_id) VALUES ")
+
+	params := make([]any, 0, len(headers)*2)
 	counter := 1
+
 	for _, v := range headers {
 		separator := ","
+
 		params = append(params, v.Name, v.Value, v.Input)
-		_, err := fmt.Fprintf(sb, "($%d, $%d, $%d, %d) %s", counter, counter+1, counter+2, taskId, separator)
+
+		_, err := fmt.Fprintf(
+			sb,
+			"($%d, $%d, $%d, %d) %s",
+			counter,
+			counter+1,
+			counter+2,
+			taskID,
+			separator,
+		)
 		if err != nil {
 			return err
 		}
+
 		counter += 3
 	}
+
 	s := sb.String()
 	s = s[:len(s)-1]
+
 	prepare, err := tx.PrepareContext(ctx, s)
 	if err != nil {
 		return err
 	}
+
+	defer func() {
+		_ = prepare.Close()
+	}()
+
 	_, err = prepare.ExecContext(ctx, params...)
 	if err != nil {
 		return err
 	}
+
 	return nil
 }

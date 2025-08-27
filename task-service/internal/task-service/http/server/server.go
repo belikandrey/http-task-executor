@@ -4,16 +4,17 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/go-chi/chi/v5"
-	"github.com/jmoiron/sqlx"
-	"http-task-executor/task-service/internal/task-service/config"
-	"http-task-executor/task-service/internal/task-service/logger"
-	"http-task-executor/task-service/internal/task-service/tasks"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/jmoiron/sqlx"
+	"http-task-executor/task-service/internal/task-service/config"
+	"http-task-executor/task-service/internal/task-service/logger"
+	"http-task-executor/task-service/internal/task-service/tasks"
 )
 
 const shutdownTimeout = 5 * time.Second
@@ -27,7 +28,12 @@ type Server struct {
 }
 
 // NewServer creates a new Server instance.
-func NewServer(config *config.Config, database *sqlx.DB, logger logger.Logger, producer tasks.Producer) *Server {
+func NewServer(
+	config *config.Config,
+	database *sqlx.DB,
+	logger logger.Logger,
+	producer tasks.Producer,
+) *Server {
 	return &Server{config: config, database: database, logger: logger, producer: producer}
 }
 
@@ -47,7 +53,8 @@ func (s *Server) Start() error {
 	}
 
 	go func() {
-		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+		err := srv.ListenAndServe()
+		if err != nil && !errors.Is(err, http.ErrServerClosed) {
 			s.logger.Fatalf("Error starting server: %s", err)
 		}
 	}()
@@ -64,5 +71,6 @@ func (s *Server) Start() error {
 	defer cancel()
 
 	s.logger.Infof("Shutting down server properly...")
+
 	return srv.Shutdown(ctx)
 }

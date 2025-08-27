@@ -10,7 +10,7 @@ import (
 // Repository represents db repository to models.Task.
 type Repository interface {
 	Create(ctx context.Context, task *models.Task) (*models.Task, error)
-	GetByIdWithOutputHeaders(ctx context.Context, id int64) (*models.Task, error)
+	GetByIDWithOutputHeaders(ctx context.Context, id int64) (*models.Task, error)
 	UpdateStatus(ctx context.Context, id int64, newStatus string) error
 	Delete(ctx context.Context, id int64) error
 }

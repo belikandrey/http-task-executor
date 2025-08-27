@@ -57,9 +57,9 @@ func (mr *MockUseCaseMockRecorder) Create(ctx, task any) *gomock.Call {
 }
 
 // GetByIdWithOutputHeaders mocks base method.
-func (m *MockUseCase) GetByIdWithOutputHeaders(ctx context.Context, id int64) (*models.Task, error) {
+func (m *MockUseCase) GetByIDWithOutputHeaders(ctx context.Context, id int64) (*models.Task, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetByIdWithOutputHeaders", ctx, id)
+	ret := m.ctrl.Call(m, "GetByIDWithOutputHeaders", ctx, id)
 	ret0, _ := ret[0].(*models.Task)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
@@ -68,5 +68,5 @@ func (m *MockUseCase) GetByIdWithOutputHeaders(ctx context.Context, id int64) (*
 // GetByIdWithOutputHeaders indicates an expected call of GetByIdWithOutputHeaders.
 func (mr *MockUseCaseMockRecorder) GetByIdWithOutputHeaders(ctx, id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByIdWithOutputHeaders", reflect.TypeOf((*MockUseCase)(nil).GetByIdWithOutputHeaders), ctx, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByIDWithOutputHeaders", reflect.TypeOf((*MockUseCase)(nil).GetByIDWithOutputHeaders), ctx, id)
 }

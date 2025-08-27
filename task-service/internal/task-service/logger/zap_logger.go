@@ -1,45 +1,48 @@
 package logger
 
 import (
-	"http-task-executor/task-service/internal/task-service/config"
 	"os"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"http-task-executor/task-service/internal/task-service/config"
 )
 
 // Logger represents application logger.
 type Logger interface {
 	// Debug - print log with debug level
-	Debug(args ...interface{})
+	Debug(args ...any)
 	// Debugf - print formatted log with debug level
-	Debugf(template string, args ...interface{})
+	Debugf(template string, args ...any)
 	// Info - print formatted log with info level
-	Info(args ...interface{})
+	Info(args ...any)
 	// Infof - print formatted log with info level
-	Infof(template string, args ...interface{})
+	Infof(template string, args ...any)
 	// Warn - print log with warn level
-	Warn(args ...interface{})
+	Warn(args ...any)
 	// Warnf - print formatted log with warn level
-	Warnf(template string, args ...interface{})
+	Warnf(template string, args ...any)
 	// Error - print log with error level
-	Error(args ...interface{})
+	Error(args ...any)
 	// Errorf - print formatted log with error level
-	Errorf(template string, args ...interface{})
+	Errorf(template string, args ...any)
 	// DPanic - print log with error level and panic
-	DPanic(args ...interface{})
+	DPanic(args ...any)
 	// DPanicf - print formatted log with error level and panic
-	DPanicf(template string, args ...interface{})
+	DPanicf(template string, args ...any)
 	// Fatal - print log with error level and os.Exit
-	Fatal(args ...interface{})
+	Fatal(args ...any)
 	// Fatalf - print formatted log with error level and os.Exit
-	Fatalf(template string, args ...interface{})
+	Fatalf(template string, args ...any)
 }
 
 // NewLogger creates new instance of Logger.
 func NewLogger(config *config.Config) (Logger, error) {
-
-	file, err := os.OpenFile(config.LoggerConfig.Filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	file, err := os.OpenFile(
+		config.LoggerConfig.Filename,
+		os.O_APPEND|os.O_CREATE|os.O_WRONLY,
+		0o644,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +57,11 @@ func NewLogger(config *config.Config) (Logger, error) {
 		encoder = zapcore.NewJSONEncoder(encoderCfg)
 	}
 
-	core := zapcore.NewCore(encoder, logWriter, zap.NewAtomicLevelAt(getLoggerLevel(config.LoggerConfig.Level)))
+	core := zapcore.NewCore(
+		encoder,
+		logWriter,
+		zap.NewAtomicLevelAt(getLoggerLevel(config.LoggerConfig.Level)),
+	)
 
 	logger := zap.New(core, zap.AddCaller())
 
@@ -68,8 +75,11 @@ func NewLogger(config *config.Config) (Logger, error) {
 }
 
 func getEnvBasedOptions(env string, file *os.File) (zapcore.WriteSyncer, zapcore.EncoderConfig) {
-	var logWriter zapcore.WriteSyncer
-	var encoderCfg zapcore.EncoderConfig
+	var (
+		logWriter  zapcore.WriteSyncer
+		encoderCfg zapcore.EncoderConfig
+	)
+
 	switch env {
 	case "local":
 		logWriter = zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(file))
@@ -80,6 +90,7 @@ func getEnvBasedOptions(env string, file *os.File) (zapcore.WriteSyncer, zapcore
 	default:
 		panic("unknown env type: " + env)
 	}
+
 	return logWriter, encoderCfg
 }
 

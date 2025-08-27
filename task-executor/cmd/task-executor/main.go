@@ -2,16 +2,17 @@ package main
 
 import (
 	"context"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
+
 	"http-task-executor/task-executor/internal/task-executor/config"
 	"http-task-executor/task-executor/internal/task-executor/logger"
 	"http-task-executor/task-executor/internal/task-executor/postgres"
 	"http-task-executor/task-executor/internal/task-executor/tasks/consumer"
 	"http-task-executor/task-executor/internal/task-executor/tasks/executor"
 	"http-task-executor/task-executor/internal/task-executor/tasks/repository"
-	"log"
-	"os"
-	"os/signal"
-	"syscall"
 )
 
 func main() {
@@ -20,7 +21,6 @@ func main() {
 	appConfig := config.MustLoad()
 
 	appLogger, err := logger.NewLogger(appConfig)
-
 	if err != nil {
 		log.Fatalf("Init logger error: %v", err)
 	}
@@ -31,6 +31,7 @@ func main() {
 	if err != nil {
 		appLogger.Fatalf("Init postgresql database error: %v", err)
 	}
+
 	appLogger.Infof("Init postgresql database success")
 
 	defer func() {
@@ -50,12 +51,15 @@ func main() {
 	if err != nil {
 		appLogger.Fatalf("Init consumer error: %v", err)
 	}
+
 	appLogger.Info("Init consumer success")
 
 	ctx, cancelFunc := context.WithCancel(context.Background())
+
 	go func() {
 		cons.Start(ctx)
 	}()
+
 	defer cancelFunc()
 
 	stop := make(chan os.Signal, 1)

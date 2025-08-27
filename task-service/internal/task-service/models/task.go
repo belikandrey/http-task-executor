@@ -17,9 +17,9 @@ type Task struct {
 	// ID - unique identifier of task.
 	ID int64 `db:"id"`
 	// URL - url to send request.
-	URL string `db:"url" validate:"required,url"`
+	URL string `db:"url"                  validate:"required,url"`
 	// Method - http method to use in request.
-	Method string `db:"method" validate:"required"`
+	Method string `db:"method"               validate:"required"`
 	// Status - current task status.
 	Status string `db:"status"`
 	// ResponseStatus - response status from the 3-rd service.
