@@ -1,0 +1,32 @@
+env: "local"
+
+http_server:
+  host: localhost
+  port: 8081
+  read_timeout: "15s"
+  write_timeout: "15s"
+
+external_service_timeout : "30s"
+
+postgres:
+  host: "localhost"
+  port: 5432
+  name: "task_executor"
+  sslmode: "disable"
+  driver: "pgx"
+  user: "task_executor_user"
+  password: "1234"
+  max_open_connections: 30
+  connection_max_lifetime: "100s"
+  max_idle_connections: 10
+  connection_max_idle_time : "10s"
+
+logger:
+  filename: "./logs/task_service.log"
+  format: "json"
+  level: "info"
+
+kafka:
+  addresses:
+    - "localhost:9091"
+  topic: "task-topic"

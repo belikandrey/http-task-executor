@@ -1,0 +1,64 @@
+version: "2"
+
+linters:
+  default: all
+
+  disable:
+    - depguard
+    - exhaustruct
+    - varnamelen
+    - err113
+    - errorlint
+    - wrapcheck
+    - forcetypeassert
+    - gochecknoglobals
+    - gochecknoinits
+    - gosec
+    - interfacebloat
+    - ireturn
+    - lll
+    - mnd
+    - noinlineerr
+    - funlen
+    - cyclop
+    - tagliatelle
+    - tagalign
+
+  settings:
+    revive:
+      enable-all-rules: true
+
+      rules:
+        - name: line-length-limit
+          severity: warning
+          disabled: true
+        - name: package-comments
+          severity: warning
+          disabled: true
+        - name: add-constant
+          disabled: true
+        - name: import-shadowing
+          disabled: true
+        - name: blank-imports
+          disabled: true
+        - name: cognitive-complexity
+          disabled: true
+        - name: cyclomatic
+          disabled: true
+        - name: function-length
+          disabled: true
+        - name: import-alias-naming
+          disabled: true
+        - name:  unchecked-type-assertion
+          disabled: true
+formatters:
+  enable:
+    - gofmt
+    - gci
+    - golines
+run:
+  timeout: 5m
+  tests: false
+  allow-parallel-runners: true
+  allow-serial-runners: true
+  go: '1.24'

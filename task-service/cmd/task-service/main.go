@@ -1,0 +1,70 @@
+package main
+
+import (
+	"log"
+
+	"github.com/jmoiron/sqlx"
+	_ "http-task-executor/task-service/docs"
+	"http-task-executor/task-service/internal/task-service/config"
+	"http-task-executor/task-service/internal/task-service/http/server"
+	"http-task-executor/task-service/internal/task-service/logger"
+	"http-task-executor/task-service/internal/task-service/migration"
+	"http-task-executor/task-service/internal/task-service/postgres"
+	"http-task-executor/task-service/internal/task-service/tasks/producer"
+)
+
+// @title			Task executor Rest API
+// @version		1.0
+// @description	Executes request to 3-rd services
+// @contact.name	Andrei Belik
+// @contact.url	https://github.com/belikandrey
+// @contact.email	belikandrey01@gmail.com
+// @BasePath		/.
+func main() {
+	log.Println("Starting task-service")
+
+	appConfig := config.MustLoad()
+
+	appLogger, err := logger.NewLogger(appConfig)
+	if err != nil {
+		log.Fatalf("Init logger error: %v", err)
+	}
+
+	appLogger.Infof("Env: %s, LogLevel: %s", appConfig.Env, appConfig.LoggerConfig.Level)
+
+	database, err := postgres.NewPostgresqlDatabase(appConfig)
+	if err != nil {
+		appLogger.Fatalf("Init postgresql database error: %v", err)
+	}
+
+	appLogger.Infof("Init postgresql database success")
+
+	defer func(database *sqlx.DB) {
+		err := database.Close()
+		if err != nil {
+			appLogger.Errorf("Close postgresql database error: %v", err)
+		}
+	}(database)
+
+	err = migration.MigratePostgresql(database)
+	if err != nil {
+		appLogger.Fatalf("MigratePostgresql database error: %v", err)
+	}
+
+	appLogger.Infof("Database migrated successfully")
+
+	produce, err := producer.NewTaskProducer(appConfig, appLogger)
+	if err != nil {
+		appLogger.Fatalf("Init kafka producer error: %v", err)
+	}
+
+	defer func() {
+		produce.Close()
+	}()
+
+	httpServer := server.NewServer(appConfig, database, appLogger, produce)
+
+	if err := httpServer.Start(); err != nil {
+		appLogger.Fatal("Start server error: %v", err)
+	}
+}
